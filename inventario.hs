@@ -7,7 +7,7 @@ module Inventario
 import Data.Time.Calendar
 import Data.UUID
 
-data MovimientoStock = Entrada | Salida deriving (Show)
+data Movimiento = Entrada | Salida deriving (Show)
 
 data Proveedor = Proveedor { proveedorId :: UUID
               , empresa :: String
@@ -16,7 +16,7 @@ data Proveedor = Proveedor { proveedorId :: UUID
               , telefono :: String
               , email :: String
               } deriving (Show)
-              
+
 data Producto = Producto { productoId :: UUID
                , folio :: Int
                , nombre :: String
@@ -30,5 +30,5 @@ data Stock = Stock { id :: UUID
               , cantidad :: Double
               , precio :: Double
               , fecha :: Day
-              , movimiento :: MovimientoStock
+              , movimiento :: Movimiento
               } deriving (Show)
