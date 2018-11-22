@@ -22,11 +22,11 @@ data Producto = Producto { productoId :: UUID
                , nombre :: String
                , color :: String
                , unidad :: String
-               , proveedor :: UUID
+               , idProveedor :: UUID
                } deriving (Show)
 
-data Stock = Stock { id :: UUID
-              , producto :: UUID
+data Stock = Stock { stockId :: UUID
+              , idProducto :: UUID
               , cantidad :: Double
               , precio :: Double
               , fecha :: Day
