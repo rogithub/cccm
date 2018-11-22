@@ -9,6 +9,7 @@ import Data.UUID
 
 data Movimiento = Entrada | Salida deriving (Show)
 
+-- Proveedor (read "00000000-0000-0000-0000-000000000000") "La Macarena" "Don Ramon" "Inguambo 56" "452-132-96-04" "ro@ro.com"
 data Proveedor = Proveedor { proveedorId :: UUID
               , empresa :: String
               , contacto :: String
