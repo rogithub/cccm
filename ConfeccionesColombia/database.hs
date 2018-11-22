@@ -1,7 +1,10 @@
 module ConfeccionesColombia.Database
 (
+  getCon,
   execNonSel,
-  execSel
+  execSel,
+  execQuery,
+  listarProveedores
 ) where
 
 import Control.Exception
@@ -23,19 +26,32 @@ defaultConnStr = "host=localhost dbname=cc user=postgres"
     --where handler :: CustomError -> IO ()
           --handler err = putStrLn (show err)
 
-execNonSel :: String -> [SqlValue] -> IO Integer
-execNonSel sqlCmdStr sqlVals = do
-    c <- connectPostgreSQL defaultConnStr
-    state <- prepare c sqlCmdStr
-    rowCount <- execute state sqlVals
-    disconnect c
-    return rowCount
+-- don't forguet to call: disconnect conn
+getCon :: IO Connection
+getCon = connectPostgreSQL defaultConnStr
 
-execSel :: String -> [SqlValue] -> IO [[SqlValue]]
-execSel sqlCmdStr sqlVals = do
-    c <- connectPostgreSQL defaultConnStr
-    select <- prepare c sqlCmdStr
-    execute select sqlVals
-    result <- fetchAllRows select
-    disconnect c
-    return result
+execNonSel :: Connection -> String -> [SqlValue] -> IO Integer
+execNonSel conn sqlCmdStr sqlVals = do
+  state <- prepare conn sqlCmdStr
+  rowCount <- execute state sqlVals
+  return rowCount
+
+execSel :: Connection -> String -> [SqlValue] -> IO [[SqlValue]]
+execSel conn sqlCmdStr sqlVals = do
+  select <- prepare conn sqlCmdStr
+  execute select sqlVals
+  result <- fetchAllRows select
+  return result
+
+execQuery :: (Connection -> IO ()) -> IO ()
+execQuery f = do
+  c <- getCon
+  f c
+  disconnect c
+  return ()
+
+listarProveedores :: Connection -> IO ()
+listarProveedores c = do
+  proveedores <- execSel c "select * from public.\"Proveedores\"" []
+  putStrLn $ show proveedores
+  return ()
