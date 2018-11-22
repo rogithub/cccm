@@ -1,0 +1,11 @@
+# remove existing container
+sudo docker rm postgres
+
+# start
+sudo docker-compose up -d
+
+# list
+sudo docker ps
+
+# stop
+sudo docker stop postgres

@@ -5,29 +5,28 @@ module Inventario
 ) where
 
 import Data.Time.Calendar
-import Data.UUID
 
 data Movimiento = Entrada | Salida deriving (Show)
 
--- Proveedor (read "00000000-0000-0000-0000-000000000000") "La Macarena" "Don Ramon" "Inguambo 56" "452-132-96-04" "ro@ro.com"
-data Proveedor = Proveedor { proveedorId :: UUID
+data Proveedor = Proveedor { proveedorId :: Int
               , empresa :: String
               , contacto :: String
               , domicilio :: String
               , telefono :: String
               , email :: String
+              , comentarios :: String
+              , activo :: Boolean
               } deriving (Show)
 
-data Producto = Producto { productoId :: UUID
-               , folio :: Int
+data Producto = Producto { productoId :: Int
                , nombre :: String
                , color :: String
                , unidad :: String
-               , idProveedor :: UUID
+               , idProveedor :: Int
                } deriving (Show)
 
-data Stock = Stock { stockId :: UUID
-              , idProducto :: UUID
+data Stock = Stock { stockId :: Int
+              , idProducto :: Int
               , cantidad :: Double
               , precio :: Double
               , fecha :: Day
