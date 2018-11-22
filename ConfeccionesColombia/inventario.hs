@@ -1,4 +1,4 @@
-module Inventario
+module ConfeccionesColombia.Inventario
 ( Producto
 , Proveedor
 , Stock
@@ -15,7 +15,7 @@ data Proveedor = Proveedor { proveedorId :: Int
               , telefono :: String
               , email :: String
               , comentarios :: String
-              , activo :: Boolean
+              , activo :: Bool
               } deriving (Show)
 
 data Producto = Producto { productoId :: Int
