@@ -1,6 +1,6 @@
 module ConfeccionesColombia.ProveedoresDb
 (
-  getProveedores
+  obtenerTodos
 ) where
 
 import Control.Exception
@@ -26,6 +26,6 @@ getAll c = do
   return (map toProveedor rows)
 
 
-getProveedores :: (IO [Proveedor] -> IO a) -> IO a
-getProveedores f = do
+obtenerTodos :: (IO [Proveedor] -> IO a) -> IO a
+obtenerTodos f = do
   execQuery (f . getAll)
