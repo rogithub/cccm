@@ -1,7 +1,7 @@
 import ConfeccionesColombia.Tipos
-import ConfeccionesColombia.ProveedoresDb as DbP
+import ConfeccionesColombia.ProveedoresDb
 main = do
-  DbP.getProveedores (\l -> do
+  getProveedores (\l -> do
       list <- l
       putStrLn $ show list
       return ()

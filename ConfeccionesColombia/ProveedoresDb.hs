@@ -6,7 +6,7 @@ module ConfeccionesColombia.ProveedoresDb
 import Control.Exception
 import Database.HDBC
 import Database.HDBC.PostgreSQL
-import ConfeccionesColombia.Db as Db
+import ConfeccionesColombia.Db
 import ConfeccionesColombia.Tipos
 
 toProveedor :: [SqlValue] -> Proveedor
@@ -28,4 +28,4 @@ getAll c = do
 
 getProveedores :: (IO [Proveedor] -> IO a) -> IO a
 getProveedores f = do
-  Db.execQuery (f . getAll)
+  execQuery (f . getAll)
