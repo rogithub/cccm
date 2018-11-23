@@ -20,12 +20,15 @@ toProveedor sqlVal =
     comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
 
-getAll :: Connection -> IO [Proveedor]
-getAll c = do
-  rows <- execSel c "select * from public.\"Proveedores\"" []
-  return (map toProveedor rows)
+getAllQuery :: Connection -> IO [[SqlValue]]
+getAllQuery c = do
+  execSel c "select * from public.\"Proveedores\"" []
 
+getAll :: ([Proveedor] -> IO a) -> Connection -> IO a
+getAll f c = do
+  rows <- getAllQuery c
+  f $ map toProveedor rows
 
-obtenerTodos :: (IO [Proveedor] -> IO a) -> IO a
+obtenerTodos :: ([Proveedor] -> IO a) -> IO a
 obtenerTodos f = do
-  execQuery (f . getAll)
+  execQuery (\c -> getAll f c)
