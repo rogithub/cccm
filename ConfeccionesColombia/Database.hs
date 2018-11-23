@@ -14,11 +14,6 @@ import Database.HDBC.PostgreSQL
 defaultConnStr :: String
 defaultConnStr = "host=localhost dbname=cc user=postgres"
 
---TODO: Consider using bracket to close connection.
--- The bracket functions are useful for making sure that
--- resources are released properly by code that may raise exceptions:
--- https://downloads.haskell.org/~ghc/5.00/docs/set/sec-exception.html
-
 --tryCatch :: a -> b
 --tryCatch =
     --catchDyn (do f)
@@ -45,9 +40,11 @@ execSel conn sqlCmdStr sqlVals = do
 
 execQuery :: (Connection -> IO ()) -> IO ()
 execQuery f = do
-  c <- getCon
-  f c
-  disconnect c
+  bracket
+    getCon
+    (\c -> disconnect c)
+    (\c -> f c)
+
   return ()
 
 listarProveedores :: Connection -> IO ()
