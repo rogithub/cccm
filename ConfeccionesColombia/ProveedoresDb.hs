@@ -6,7 +6,7 @@ module ConfeccionesColombia.ProveedoresDb
 import Control.Exception
 import Database.HDBC
 import Database.HDBC.PostgreSQL
-import ConfeccionesColombia.Database as Db
+import ConfeccionesColombia.Db as Db
 import ConfeccionesColombia.Tipos
 
 toProveedor :: [SqlValue] -> Proveedor

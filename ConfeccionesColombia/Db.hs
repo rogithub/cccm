@@ -1,4 +1,4 @@
-module ConfeccionesColombia.Database
+module ConfeccionesColombia.Db
 (
   getCon,
   execNonSel,
