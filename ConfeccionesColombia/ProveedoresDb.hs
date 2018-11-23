@@ -1,6 +1,7 @@
 module ConfeccionesColombia.ProveedoresDb
 (
-  getAll
+  getAll,
+  save
 ) where
 
 import Control.Exception
@@ -20,10 +21,28 @@ toType sqlVal =
     comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
 
+fromType :: Proveedor -> [SqlValue]
+fromType p =
+  [toSql $ empresa p,
+  toSql $ contacto p,
+  toSql $ domicilio p,
+  toSql $ telefono p,
+  toSql $ email  p,
+  toSql $ comentarios p,
+  toSql $ activo p]
+
 allQ :: Connection -> IO [[SqlValue]]
 allQ c =
-  execSel c "select * from public.\"Proveedores\"" []
+  execSel c "SELECT * FROM public.\"Proveedores\"" []
 
 getAll :: ([Proveedor] -> IO a) -> IO a
 getAll f =
   execQuery (\c -> allQ c >>= (\rows -> f $ map toType rows))
+
+savQ :: Connection -> [SqlValue] -> IO Integer
+savQ c v =
+    execNonSel c "INSERT INTO public.\"Proveedores\" values (?,?,?,?,?,?,?)" v
+
+save :: Proveedor -> IO Integer
+save p =
+  execQuery (\c -> savQ c (fromType p))
