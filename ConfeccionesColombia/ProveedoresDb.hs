@@ -9,8 +9,8 @@ import Database.HDBC.PostgreSQL
 import ConfeccionesColombia.Db
 import ConfeccionesColombia.Tipos
 
-aTipo :: [SqlValue] -> Proveedor
-aTipo sqlVal =
+toType :: [SqlValue] -> Proveedor
+toType sqlVal =
   Proveedor { proveedorId = fromSql (sqlVal!!0)::Int,
     empresa = fromSql (sqlVal!!1)::String,
     contacto = fromSql (sqlVal!!2)::String,
@@ -26,4 +26,4 @@ allQ c =
 
 getAll :: ([Proveedor] -> IO a) -> IO a
 getAll f =
-  execQuery (\c -> allQ c >>= (\rows -> f $ map aTipo rows))
+  execQuery (\c -> allQ c >>= (\rows -> f $ map toType rows))
