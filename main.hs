@@ -10,6 +10,8 @@ main = do
     comentarios = "chido cabron",
     activo = True }
 
-  putStrLn (show affectedRows)
+  putStrLn $ show affectedRows
 
-  getAll (\l -> putStrLn $ show l)
+  list <- getAll (\l -> putStrLn $ show l)
+
+  putStrLn $ show list
