@@ -1,6 +1,6 @@
 module ConfeccionesColombia.ProveedoresDb
 (
-  obtenerTodos
+  getAll
 ) where
 
 import Control.Exception
@@ -20,10 +20,10 @@ aTipo sqlVal =
     comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
 
-getAll :: Connection -> IO [[SqlValue]]
-getAll c =
+allQ :: Connection -> IO [[SqlValue]]
+allQ c =
   execSel c "select * from public.\"Proveedores\"" []
 
-obtenerTodos :: ([Proveedor] -> IO a) -> IO a
-obtenerTodos f =
-  execQuery (\c -> getAll c >>= (\rows -> f $ map aTipo rows))
+getAll :: ([Proveedor] -> IO a) -> IO a
+getAll f =
+  execQuery (\c -> allQ c >>= (\rows -> f $ map aTipo rows))
