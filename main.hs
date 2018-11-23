@@ -1,7 +1,7 @@
 import ConfeccionesColombia.Tipos
 import ConfeccionesColombia.ProveedoresDb
 main = do
-  save Proveedor { proveedorId = 0,
+  affectedRows <- save Proveedor { proveedorId = 0,
     empresa = "Liconsa",
     contacto = "Rodrigo",
     domicilio = "Juarez 1000",
@@ -9,5 +9,7 @@ main = do
     email = "correo.rodrigo@gmail.com",
     comentarios = "chido cabron",
     activo = True }
-  
+
+  putStrLn (show affectedRows)
+
   getAll (\l -> putStrLn $ show l)
