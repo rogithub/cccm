@@ -13,13 +13,6 @@ import Database.HDBC.PostgreSQL
 defaultConnStr :: String
 defaultConnStr = "host=localhost dbname=cc user=postgres"
 
---tryCatch :: a -> b
---tryCatch =
-    --catchDyn (do f)
-              --handler
-    --where handler :: CustomError -> IO ()
-          --handler err = putStrLn (show err)
-
 getCon :: IO Connection
 getCon = connectPostgreSQL defaultConnStr
 
