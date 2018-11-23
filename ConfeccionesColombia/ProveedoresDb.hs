@@ -26,7 +26,4 @@ getAllQuery c = do
 
 obtenerTodos :: ([Proveedor] -> IO a) -> IO a
 obtenerTodos f = do
-  execQuery (\c -> do
-      rows <- getAllQuery c
-      f $ map toProveedor rows
-    )
+  execQuery (\c -> getAllQuery c >>= (\rows -> f $ map toProveedor rows))
