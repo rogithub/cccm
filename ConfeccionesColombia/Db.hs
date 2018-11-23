@@ -34,4 +34,7 @@ execQuery f = do
   bracket
     getCon
     (\c -> disconnect c)
-    (\c -> f c)
+    (\c -> do
+        result <- f c
+        commit c
+        return result)

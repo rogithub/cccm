@@ -41,7 +41,7 @@ getAll f =
 
 savQ :: Connection -> [SqlValue] -> IO Integer
 savQ c v =
-    execNonSel c "INSERT INTO public.\"Proveedores\" values (?,?,?,?,?,?,?)" v
+    execNonSel c "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" v
 
 save :: Proveedor -> IO Integer
 save p =
