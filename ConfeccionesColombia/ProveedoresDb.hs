@@ -24,11 +24,6 @@ getAllQuery :: Connection -> IO [[SqlValue]]
 getAllQuery c = do
   execSel c "select * from public.\"Proveedores\"" []
 
-getAll :: ([Proveedor] -> IO a) -> Connection -> IO a
-getAll f c = do
-  rows <- getAllQuery c
-  f $ map toProveedor rows
-
 obtenerTodos :: ([Proveedor] -> IO a) -> IO a
 obtenerTodos f = do
-  execQuery (\c -> getAll f c)
+  execQuery (\c -> (map toProveedor) <*> (getAllQuery c) )
