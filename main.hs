@@ -1,3 +1,9 @@
-import ConfeccionesColombia.Database as CcDb
+import ConfeccionesColombia.Tipos
+import ConfeccionesColombia.ProveedoresDb as DbP
 main = do
-  CcDb.execQuery CcDb.listarProveedores
+  DbP.getProveedores (\l -> do
+      list <- l
+      putStrLn $ show list
+      return ()
+    )
+  return()

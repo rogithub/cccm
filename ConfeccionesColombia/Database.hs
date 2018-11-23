@@ -3,8 +3,7 @@ module ConfeccionesColombia.Database
   getCon,
   execNonSel,
   execSel,
-  execQuery,
-  listarProveedores
+  execQuery
 ) where
 
 import Control.Exception
@@ -21,7 +20,6 @@ defaultConnStr = "host=localhost dbname=cc user=postgres"
     --where handler :: CustomError -> IO ()
           --handler err = putStrLn (show err)
 
--- don't forguet to call: disconnect conn
 getCon :: IO Connection
 getCon = connectPostgreSQL defaultConnStr
 
@@ -38,17 +36,9 @@ execSel conn sqlCmdStr sqlVals = do
   result <- fetchAllRows select
   return result
 
-execQuery :: (Connection -> IO ()) -> IO ()
+execQuery :: (Connection -> IO a) -> IO a
 execQuery f = do
   bracket
     getCon
     (\c -> disconnect c)
     (\c -> f c)
-
-  return ()
-
-listarProveedores :: Connection -> IO ()
-listarProveedores c = do
-  proveedores <- execSel c "select * from public.\"Proveedores\"" []
-  putStrLn $ show proveedores
-  return ()

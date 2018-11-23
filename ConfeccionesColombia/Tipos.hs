@@ -1,7 +1,8 @@
-module ConfeccionesColombia.Inventario
-( Producto
-, Proveedor
-, Stock
+module ConfeccionesColombia.Tipos
+( Producto(..)
+, Proveedor(..)
+, Stock(..)
+, Movimiento(..)
 ) where
 
 import Data.Time.Calendar
