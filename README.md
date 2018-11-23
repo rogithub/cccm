@@ -2,4 +2,6 @@
 ## Core Modules
 
 ## Compile:
-ghc --make main.hs
+```sh
+$ ghc --make main.hs
+```
