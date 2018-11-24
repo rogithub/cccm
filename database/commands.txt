@@ -10,8 +10,12 @@ $ sudo docker ps
 # stop
 $ sudo docker stop postgres
 
-# postgress backups
+# postgres backups
 https://devopsheaven.com/postgresql/pg_dump/databases/docker/backup/2017/09/10/backup-postgresql-database-using-docker.html
 
 $ sudo docker exec postgres /user/bin/pg_dump -U postgres cc | gzip -9 > ccBackup.sql.gz
 
+# postgres restore
+https://devopsheaven.com/postgresql/psql/databases/docker/backup/restore/2017/09/10/restore-postgresql-database-using-docker.html
+
+$ gunzip < ccBackup.sql.gz | sudo docker exec -i postgres /usr/bin/psql -h postgres -U postgres cc
