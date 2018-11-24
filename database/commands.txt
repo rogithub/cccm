@@ -1,11 +1,17 @@
 # remove existing container
-sudo docker rm postgres
+$ sudo docker rm postgres
 
 # start
-sudo docker-compose up -d
+$ sudo docker-compose up -d
 
 # list
-sudo docker ps
+$ sudo docker ps
 
 # stop
-sudo docker stop postgres
+$ sudo docker stop postgres
+
+# postgress backups
+https://devopsheaven.com/postgresql/pg_dump/databases/docker/backup/2017/09/10/backup-postgresql-database-using-docker.html
+
+$ sudo docker exec postgres /user/bin/pg_dump -U postgres cc | gzip -9 > ccBackup.sql.gz
+
