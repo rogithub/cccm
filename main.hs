@@ -12,7 +12,7 @@ main = do
 
   putStrLn $ show affectedRows
 
-  -- needs to be inside a lambda so it keeps lazy loading
+  -- needs to be inside a lambda so it keeps laziness
   list <- getAll (\l -> putStrLn $ show l)
 
   putStrLn $ show list
