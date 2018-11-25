@@ -10,8 +10,5 @@ $ sudo docker ps
 # stop
 $ sudo docker stop postgres
 
-# postgress backups
-https://devopsheaven.com/postgresql/pg_dump/databases/docker/backup/2017/09/10/backup-postgresql-database-using-docker.html
-
-$ sudo docker exec postgres /user/bin/pg_dump -U postgres cc | gzip -9 > ccBackup.sql.gz
-
+# postgress backups (copy entire folder)
+$ scp -r postgres/ ro@192.168.1.68:/home/ro/Databases/postgres
