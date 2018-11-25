@@ -12,3 +12,4 @@ $ sudo docker stop postgres
 
 # postgress backups (copy entire folder)
 $ scp -r postgres/ ro@192.168.1.68:/home/ro/Databases/postgres
+
