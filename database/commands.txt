@@ -15,5 +15,4 @@ BACKUP COMMAND
 $ sudo docker exec postgres pg_dump -U postgres cc > ccbackup
 
 RESTORE COMMAND
-cat ccbackup | sudo docker exec -i postgres psql -U postgres
-
+cat ccbackup | sudo docker exec -i postgres psql -U postgres cc
