@@ -20,6 +20,21 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: Productos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Productos" (
+    id bigint NOT NULL,
+    nombre character varying(500),
+    color character varying(300),
+    unidad character varying(300),
+    "proveedorId" bigint
+);
+
+
+ALTER TABLE public."Productos" OWNER TO postgres;
+
+--
 -- Name: Proveedores; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -66,11 +81,20 @@ ALTER TABLE ONLY public."Proveedores" ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Data for Name: Productos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Productos" (id, nombre, color, unidad, "proveedorId") FROM stdin;
+\.
+
+
+--
 -- Data for Name: Proveedores; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public."Proveedores" (id, empresa, contacto, domicilio, telefono, email, comentarios, activo) FROM stdin;
 41	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+72	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
 \.
 
 
@@ -78,7 +102,15 @@ COPY public."Proveedores" (id, empresa, contacto, domicilio, telefono, email, co
 -- Name: Proveedores_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Proveedores_id_seq"', 71, true);
+SELECT pg_catalog.setval('public."Proveedores_id_seq"', 72, true);
+
+
+--
+-- Name: Productos Productos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Productos"
+    ADD CONSTRAINT "Productos_pkey" PRIMARY KEY (id);
 
 
 --
@@ -87,6 +119,14 @@ SELECT pg_catalog.setval('public."Proveedores_id_seq"', 71, true);
 
 ALTER TABLE ONLY public."Proveedores"
     ADD CONSTRAINT "Proveedores_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Productos Productos_proveedorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Productos"
+    ADD CONSTRAINT "Productos_proveedorId_fkey" FOREIGN KEY ("proveedorId") REFERENCES public."Proveedores"(id);
 
 
 --
