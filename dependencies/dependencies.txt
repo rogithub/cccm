@@ -1,2 +1,5 @@
 sudo apt-get install libpq-dev
-cabal install HDBC-postgresql
+
+$ cabal install HDBC-postgresql
+$ cabal install happstack-server
+$ cabal install aeson

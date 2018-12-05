@@ -1,7 +1,14 @@
-# Confecciones Colombia
-## Core Modules
+# Confecciones Colombia API
 
-## Compile:
+## Run option 1:
 ```sh
-$ ghc --make main.hs
+$ ghc --make -threaded main.hs -o main
 ```
+
+## Run option 2:
+```sh
+$ runhaskell main.hs
+```
+
+#browser at
+http://localhost:8000/
