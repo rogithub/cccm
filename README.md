@@ -1,14 +1,14 @@
 # Confecciones Colombia API
 
-## Run option 1:
+## run test:
 ```sh
-$ ghc --make -threaded main.hs -o main
+$ ghc --make  mainb.hs
 ```
 
-## Run option 2:
+## Run api:
 ```sh
 $ runhaskell main.hs
 ```
 
-#browser at
+## browse api at
 http://localhost:8000/

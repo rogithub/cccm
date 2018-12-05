@@ -23,20 +23,3 @@ main = simpleHTTP nullConf $ msum
          method GET
          ok $ toResponseBS (C.pack "application/json") (encode getProveedor)
        ]
-
--- main = do
---   affectedRows <- save Proveedor { proveedorId = 0,
---     empresa = "Liconsa",
---     contacto = "Rodrigo",
---     domicilio = "Juarez 1000",
---     telefono = "4521329604",
---     email = "correo.rodrigo@gmail.com",
---     comentarios = "chido cabron",
---     activo = True }
---
---   putStrLn $ show affectedRows
---
---   -- needs to be inside a lambda so it keeps laziness
---   list <- getAll (\l -> putStrLn $ show l)
---
---   putStrLn $ show list
