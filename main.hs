@@ -3,7 +3,8 @@ module Main where
 import ConfeccionesColombia.Tipos
 import ConfeccionesColombia.ProveedoresDb
 import Control.Monad (msum)
-import Happstack.Server (Method(GET, POST), dir, method, nullConf, ok, toResponse, simpleHTTP)
+import Data.ByteString.Char8 as C
+import Happstack.Server (Method(GET, POST), dir, method, nullConf, ok, toResponseBS, simpleHTTP)
 import Data.Aeson
 
 getProveedor :: Proveedor
@@ -18,8 +19,9 @@ getProveedor = Proveedor { proveedorId = 0,
 
 main :: IO ()
 main = simpleHTTP nullConf $ msum
-       [ dir "getAll" $ do method GET
-                           ok $ toResponse (encode getProveedor)
+       [ dir "getAll" $ do
+         method GET
+         ok $ toResponseBS (C.pack "application/json") (encode getProveedor)
        ]
 
 -- main = do
