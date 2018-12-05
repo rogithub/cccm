@@ -19,7 +19,7 @@ getProveedor = Proveedor { proveedorId = 0,
 main :: IO ()
 main = simpleHTTP nullConf $ msum
        [ dir "getAll" $ do method GET
-                           ok $ toResponse (encode ["UNO", "DOS"])
+                           ok $ toResponse (encode getProveedor)
        ]
 
 -- main = do

@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 module ConfeccionesColombia.Tipos
 ( Producto(..)
 , Proveedor(..)
@@ -5,9 +6,16 @@ module ConfeccionesColombia.Tipos
 , Movimiento(..)
 ) where
 
+import Data.Aeson
+import GHC.Generics
 import Data.Time.Calendar
 
-data Movimiento = Entrada | Salida deriving (Show)
+data Movimiento = Entrada | Salida deriving (Generic, Show)
+instance ToJSON Movimiento where
+  toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON Movimiento
+
 
 data Proveedor = Proveedor { proveedorId :: Int
               , empresa :: String
@@ -17,14 +25,22 @@ data Proveedor = Proveedor { proveedorId :: Int
               , email :: String
               , comentarios :: String
               , activo :: Bool
-              } deriving (Show)
+              } deriving (Generic, Show)
+instance ToJSON Proveedor where
+  toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON Proveedor
 
 data Producto = Producto { productoId :: Int
                , nombre :: String
                , color :: String
                , unidad :: String
                , idProveedor :: Int
-               } deriving (Show)
+               } deriving (Generic, Show)
+instance ToJSON Producto where
+ toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON Producto
 
 data Stock = Stock { stockId :: Int
               , idProducto :: Int
@@ -32,4 +48,8 @@ data Stock = Stock { stockId :: Int
               , precio :: Double
               , fecha :: Day
               , movimiento :: Movimiento
-              } deriving (Show)
+              } deriving (Generic, Show)
+instance ToJSON Stock where
+ toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON Stock
