@@ -4,10 +4,8 @@ module ConfeccionesColombia.ProveedoresDb
   save
 ) where
 
-import Control.Exception
 import Database.HDBC
-import Database.HDBC.PostgreSQL
-import ConfeccionesColombia.Db
+import DataAccess.Commands
 import ConfeccionesColombia.Tipos
 
 toType :: [SqlValue] -> Proveedor
@@ -31,18 +29,17 @@ fromType p =
   toSql $ comentarios p,
   toSql $ activo p]
 
-allQ :: Connection -> IO [[SqlValue]]
-allQ c =
-  execSel c "SELECT * FROM public.\"Proveedores\"" []
+getSelCmd :: Command
+getSelCmd =
+  Command "SELECT * FROM public.\"Proveedores\"" []
 
-getAll :: ([Proveedor] -> IO a) -> IO a
-getAll f =
-  execQuery (\c -> allQ c >>= (\rows -> f $ map toType rows))
+getAll :: IO [Proveedor]
+getAll = execSelQuery (getSelCmd) >>= (\rows -> return (map toType rows))
 
-savQ :: Connection -> [SqlValue] -> IO Integer
-savQ c v =
-    execNonSel c "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" v
+getSavCmd :: Proveedor -> Command
+getSavCmd p =
+    Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (fromType p)
 
 save :: Proveedor -> IO Integer
 save p =
-  execQuery (\c -> savQ c (fromType p))
+  execNonSelQuery (getSavCmd p)

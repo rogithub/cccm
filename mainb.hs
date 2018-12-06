@@ -13,7 +13,6 @@ insertOne = do
     activo = True }
 
 main = do
-  -- needs to be inside a lambda so it keeps laziness
-  list <- getAll (\l -> putStrLn $ show l)
+  list <- getAll
 
   putStrLn $ show list
