@@ -17,9 +17,14 @@ getProveedor = Proveedor { proveedorId = 0,
   comentarios = "chido cabron",
   activo = True }
 
+toJsonResponse :: ToJSON a => IO a -> IO b
+toJsonResponse it = do
+  item <-item
+  ok $ toResponseBS (C.pack "application/json") (encode item)
+
 main :: IO ()
 main = simpleHTTP nullConf $ msum
        [ dir "getAll" $ do
          method GET
-         ok $ toResponseBS (C.pack "application/json") (encode getProveedor)
+         toJsonResponse (getAll)
        ]
