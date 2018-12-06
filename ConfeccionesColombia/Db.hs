@@ -38,3 +38,19 @@ execQuery f = do
         result <- f c
         commit c
         return result)
+
+selCmd :: Connection -> String -> [SqlValue] -> IO [[SqlValue]]
+selCmd c sql params =
+  execSel c sql params
+
+getAll :: String -> [SqlValue] -> ([a] -> IO a) -> IO a
+getAll sql params f =
+  execQuery (\c -> selCmd c sql params >>= (\rows -> f rows))
+
+nonSelCmd :: Connection -> String -> [SqlValue] -> IO Integer
+nonSelCmd c sql v =
+    execNonSel c sql v
+
+save :: Proveedor -> IO Integer
+save p =
+  execQuery (\c -> savQ c (fromType p))

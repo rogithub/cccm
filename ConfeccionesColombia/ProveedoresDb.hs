@@ -35,13 +35,9 @@ allQ :: Connection -> IO [[SqlValue]]
 allQ c =
   execSel c "SELECT * FROM public.\"Proveedores\"" []
 
-getAll :: Int -> IO [Proveedor]
-getAll n =
-  execQuery (\c -> do
-    rows <- allQ c
-    let mapped = map toType rows
-    let result = take n mapped
-    return result)
+getAll :: ([Proveedor] -> IO a) -> IO a
+getAll f =
+  execQuery (\c -> allQ c >>= (\rows -> f $ map toType rows))
 
 savQ :: Connection -> [SqlValue] -> IO Integer
 savQ c v =

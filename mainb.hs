@@ -14,6 +14,6 @@ insertOne = do
 
 main = do
   -- needs to be inside a lambda so it keeps laziness
-  list <- getAll 2
+  list <- getAll (\l -> putStrLn $ show l)
 
   putStrLn $ show list
