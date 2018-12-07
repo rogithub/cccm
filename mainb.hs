@@ -1,5 +1,6 @@
 import ConfeccionesColombia.Tipos
 import ConfeccionesColombia.ProveedoresDb
+import Data.Aeson
 
 insertOne :: IO Integer
 insertOne = do
@@ -14,5 +15,4 @@ insertOne = do
 
 main = do
   list <- getAll
-
-  putStrLn $ show list
+  putStrLn $ show (encode list)

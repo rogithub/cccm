@@ -6,6 +6,7 @@ import Control.Monad (msum)
 import Data.ByteString.Char8 as C
 import Happstack.Server (Method(GET, POST), dir, method, nullConf, ok, toResponseBS, simpleHTTP)
 import Data.Aeson
+import Control.Monad.IO.Class        ( liftIO )
 
 getProveedor :: Proveedor
 getProveedor = Proveedor { proveedorId = 0,
@@ -17,14 +18,11 @@ getProveedor = Proveedor { proveedorId = 0,
   comentarios = "chido cabron",
   activo = True }
 
-toJsonResponse :: ToJSON a => IO a -> IO b
-toJsonResponse it = do
-  item <-item
-  ok $ toResponseBS (C.pack "application/json") (encode item)
 
 main :: IO ()
 main = simpleHTTP nullConf $ msum
        [ dir "getAll" $ do
          method GET
-         toJsonResponse (getAll)
+         all <- liftIO $ getAll
+         ok $ toResponseBS (C.pack "application/json") (encode all)
        ]
