@@ -10,9 +10,9 @@ insertOne = do
     domicilio = "Juarez 1000",
     telefono = "4521329604",
     email = "correo.rodrigo@gmail.com",
-    comentarios = "chido cabron",
+    comenProv = "chido cabron",
     activo = True }
 
-main = do  
+main = do
   list <- getAll
   putStrLn $ show (encode list)

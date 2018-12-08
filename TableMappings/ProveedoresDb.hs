@@ -1,4 +1,4 @@
-module ConfeccionesColombia.ProveedoresDb
+module TableMappings.ProveedoresDb
 (
   getAll,
   save
@@ -6,7 +6,8 @@ module ConfeccionesColombia.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
-import ConfeccionesColombia.Tipos
+import Tipos.Proveedor
+import DataAccess.Db
 
 toType :: [SqlValue] -> Proveedor
 toType sqlVal =
@@ -16,7 +17,7 @@ toType sqlVal =
     domicilio = fromSql (sqlVal!!3)::String,
     telefono = fromSql (sqlVal!!4)::String,
     email = fromSql (sqlVal!!5)::String,
-    comentarios = fromSql (sqlVal!!6)::String,
+    comenProv = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
@@ -26,7 +27,7 @@ fromType p =
   toSql $ domicilio p,
   toSql $ telefono p,
   toSql $ email  p,
-  toSql $ comentarios p,
+  toSql $ comenProv p,
   toSql $ activo p]
 
 getSelCmd :: Command
