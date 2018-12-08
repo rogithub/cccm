@@ -11,7 +11,7 @@ import Tipos.Stock
 
 toType :: [SqlValue] -> Stock
 toType sqlVal =
-  Stock { id = fromSql (sqlVal!!0)::Int,
+  Stock { idStock = fromSql (sqlVal!!0)::Int,
     idProducto = fromSql (sqlVal!!1)::Int,
     idProveedor = fromSql (sqlVal!!2)::Int,
     cantidad = fromSql (sqlVal!!3)::Double,

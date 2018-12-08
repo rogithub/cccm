@@ -10,7 +10,7 @@ import Tipos.Producto
 
 toType :: [SqlValue] -> Producto
 toType sqlVal =
-  Producto { id = fromSql (sqlVal!!0)::Int,
+  Producto { idProducto = fromSql (sqlVal!!0)::Int,
     nombre = fromSql (sqlVal!!1)::String,
     color = fromSql (sqlVal!!2)::String,
     unidad = fromSql (sqlVal!!3)::String,

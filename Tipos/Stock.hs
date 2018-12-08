@@ -16,7 +16,7 @@ instance ToJSON Movimiento where
 instance FromJSON Movimiento
 
 
-data Stock = Stock { id :: Int
+data Stock = Stock { idStock :: Int
               , idProducto :: Int
               , idProveedor :: Int
               , cantidad :: Double

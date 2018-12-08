@@ -5,7 +5,7 @@ module Tipos.Proveedor
 import Data.Aeson
 import GHC.Generics
 
-data Proveedor = Proveedor { id :: Int
+data Proveedor = Proveedor { idProveedor :: Int
               , empresa :: String
               , contacto :: String
               , domicilio :: String

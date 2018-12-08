@@ -1,7 +1,7 @@
 module Main where
 
-import ConfeccionesColombia.Tipos
-import ConfeccionesColombia.ProveedoresDb
+import Tipos.Proveedor
+import TableMappings.ProveedoresDb
 import Control.Monad              ( msum )
 import Control.Monad.IO.Class     ( liftIO )
 import Data.ByteString.Char8 as C
@@ -13,12 +13,12 @@ import Happstack.Server           (Response, ServerPart, Method(GET, POST),
 main :: IO ()
 main = simpleHTTP nullConf $ handlers
 
-listarClientes :: ServerPart Response
-listarClientes = do
+listarProveedores :: ServerPart Response
+listarProveedores = do
   method GET
   all <- liftIO $ getAll
   ok $ toResponseBS (C.pack "application/json") (encode all)
 
 handlers :: ServerPart Response
 handlers =
-  msum [ dirs "clientes/lista" $ listarClientes ]
+  msum [ dirs "proveedores/lista" $ listarProveedores ]

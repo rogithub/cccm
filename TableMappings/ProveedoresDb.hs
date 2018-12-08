@@ -10,13 +10,13 @@ import Tipos.Proveedor
 
 toType :: [SqlValue] -> Proveedor
 toType sqlVal =
-  Proveedor { id = fromSql (sqlVal!!0)::Int,
+  Proveedor { idProveedor = fromSql (sqlVal!!0)::Int,
     empresa = fromSql (sqlVal!!1)::String,
     contacto = fromSql (sqlVal!!2)::String,
     domicilio = fromSql (sqlVal!!3)::String,
     telefono = fromSql (sqlVal!!4)::String,
     email = fromSql (sqlVal!!5)::String,
-    comenProv = fromSql (sqlVal!!6)::String,
+    comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
@@ -26,7 +26,7 @@ fromType p =
   toSql $ domicilio p,
   toSql $ telefono p,
   toSql $ email  p,
-  toSql $ comenProv p,
+  toSql $ comentarios p,
   toSql $ activo p]
 
 getSelCmd :: Command

@@ -5,7 +5,7 @@ module Tipos.Producto
 import Data.Aeson
 import GHC.Generics
 
-data Producto = Producto { id :: Int
+data Producto = Producto { idProducto :: Int
                , nombre :: String
                , color :: String
                , unidad :: String
