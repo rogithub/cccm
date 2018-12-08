@@ -13,6 +13,6 @@ insertOne = do
     comentarios = "chido cabron",
     activo = True }
 
-main = do
+main = do  
   list <- getAll
   putStrLn $ show (encode list)
