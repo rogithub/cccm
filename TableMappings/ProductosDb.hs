@@ -4,10 +4,8 @@ module TableMappings.ProductosDb
   save
 ) where
 
-import Control.Exception
 import Database.HDBC
-import Database.HDBC.PostgreSQL
-import DataAccess.Db
+import DataAccess.Commands
 import Tipos.Producto
 
 toType :: [SqlValue] -> Producto

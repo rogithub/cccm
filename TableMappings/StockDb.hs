@@ -4,15 +4,14 @@ module TableMappings.StocksDb
   save
 ) where
 
-import Control.Exception
 import Database.HDBC
-import Database.HDBC.PostgreSQL
-import ConfeccionesColombia.Db
-import ConfeccionesColombia.Tipos
+import DataAccess.Commands
+import Tipos.Stock
+
 
 toType :: [SqlValue] -> Stock
 toType sqlVal =
-  Stock { stockId = fromSql (sqlVal!!0)::Int,
+  Stock { id = fromSql (sqlVal!!0)::Int,
     idProducto = fromSql (sqlVal!!1)::Int,
     idProveedor = fromSql (sqlVal!!2)::Int,
     cantidad = fromSql (sqlVal!!3)::Double,

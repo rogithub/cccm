@@ -7,11 +7,10 @@ module TableMappings.ProveedoresDb
 import Database.HDBC
 import DataAccess.Commands
 import Tipos.Proveedor
-import DataAccess.Db
 
 toType :: [SqlValue] -> Proveedor
 toType sqlVal =
-  Proveedor { proveedorId = fromSql (sqlVal!!0)::Int,
+  Proveedor { id = fromSql (sqlVal!!0)::Int,
     empresa = fromSql (sqlVal!!1)::String,
     contacto = fromSql (sqlVal!!2)::String,
     domicilio = fromSql (sqlVal!!3)::String,
