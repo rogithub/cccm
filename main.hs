@@ -8,7 +8,7 @@ import Data.ByteString.Char8 as C
 import Data.Aeson
 import Happstack.Server           (Response, ServerPart, Method(GET, POST),
                                   dirs, method, nullConf, ok,
-                                  toResponseBS, simpleHTTP)
+                                  toResponseBS, simpleHTTP, setHeaderM)
 
 main :: IO ()
 main = simpleHTTP nullConf $ handlers
@@ -17,6 +17,10 @@ listarProveedores :: ServerPart Response
 listarProveedores = do
   method GET
   all <- liftIO $ getAll
+  mapM_ (uncurry setHeaderM) [ ("Access-Control-Allow-Origin", "*")
+                             , ("Access-Control-Allow-Headers", "Accept, Content-Type")
+                             , ("Access-Control-Allow-Methods", "GET, HEAD, POST, DELETE, OPTIONS, PUT, PATCH")
+                             ]
   ok $ toResponseBS (C.pack "application/json") (encode all)
 
 handlers :: ServerPart Response
