@@ -15,5 +15,5 @@ nuevo =
 
 main = do
   --save nuevo
-  list <- getAll
-  putStrLn $ show (encode list)
+  json <- encode <$> getAll
+  putStrLn $ show json
