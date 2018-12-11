@@ -5,6 +5,7 @@ import TableMappings.ProveedoresDb
 import Control.Monad              ( msum )
 import Control.Monad.IO.Class     ( liftIO )
 import Data.ByteString.Char8 as C
+import Data.ByteString.Lazy as L
 import Data.Aeson
 import Happstack.Server           (Response, ServerPart, Method(GET, POST),
                                   dirs, method, nullConf, ok,
@@ -13,16 +14,17 @@ import Happstack.Server           (Response, ServerPart, Method(GET, POST),
 main :: IO ()
 main = simpleHTTP nullConf $ handlers
 
-listarProveedores :: ServerPart Response
-listarProveedores = do
+getOkJSON :: (ToJSON a) => IO a -> ServerPart Response
+getOkJSON payload = do
   method GET
-  all <- liftIO $ getAll
+  newMonad <- liftIO payload
+  let json = encode newMonad
   mapM_ (uncurry setHeaderM) [ ("Access-Control-Allow-Origin", "*")
                              , ("Access-Control-Allow-Headers", "Accept, Content-Type")
                              , ("Access-Control-Allow-Methods", "GET, HEAD, POST, DELETE, OPTIONS, PUT, PATCH")
                              ]
-  ok $ toResponseBS (C.pack "application/json") (encode all)
+  ok $ toResponseBS (C.pack "application/json") (json)
 
 handlers :: ServerPart Response
 handlers =
-  msum [ dirs "proveedores/lista" $ listarProveedores ]
+  msum [ dirs "proveedores/lista" $ getOkJSON getAll ]

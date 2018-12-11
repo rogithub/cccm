@@ -2,9 +2,9 @@ import Tipos.Proveedor
 import TableMappings.ProveedoresDb
 import Data.Aeson
 
-insertOne :: IO Integer
-insertOne = do
-  save Proveedor { idProveedor = 0,
+nuevo :: Proveedor
+nuevo =
+  Proveedor { idProveedor = 0,
     empresa = "Liconsa",
     contacto = "Rodrigo",
     domicilio = "Juarez 1000",
@@ -14,5 +14,6 @@ insertOne = do
     activo = True }
 
 main = do
+  --save nuevo
   list <- getAll
   putStrLn $ show (encode list)
