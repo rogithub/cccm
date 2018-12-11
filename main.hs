@@ -8,7 +8,7 @@ import Data.ByteString.Char8 as C
 import Data.ByteString.Lazy as L
 import Data.Aeson
 import Happstack.Server           (Response, ServerPart, Method(GET, POST),
-                                  dirs, method, nullConf, ok,
+                                  dirs, method, nullConf, ok, look,
                                   toResponseBS, simpleHTTP, setHeaderM)
 
 main :: IO ()
@@ -25,6 +25,18 @@ getOkJSON payload = do
                              ]
   ok $ toResponseBS (C.pack "application/json") json
 
+proveedoresListing :: ServerPart Response
+proveedoresListing = do
+  getOkJSON getAll
+
+proveedoresOne :: ServerPart Response
+proveedoresOne = do
+  key <- look "id"
+  let intKey = read key :: Int
+  getOkJSON (getOne intKey)
+
 handlers :: ServerPart Response
 handlers =
-  msum [ dirs "proveedores/lista" $ getOkJSON getAll ]
+  msum [ dirs "proveedores/lista" $ proveedoresListing
+       , dirs "proveedores" $ proveedoresOne
+       ]

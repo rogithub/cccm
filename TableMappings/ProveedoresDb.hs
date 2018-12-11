@@ -1,6 +1,7 @@
 module TableMappings.ProveedoresDb
 (
   getAll,
+  getOne,
   save
 ) where
 
@@ -29,17 +30,29 @@ fromType p =
   toSql $ comentarios p,
   toSql $ activo p]
 
-getSelCmd :: Command
-getSelCmd =
+selCmd :: Command
+selCmd =
   Command "SELECT * FROM public.\"Proveedores\"" []
 
-getAll :: IO [Proveedor]
-getAll = execSelQuery (getSelCmd) >>= (\rows -> return (map toType rows))
+selOneCmd :: Int -> Command
+selOneCmd key =
+  Command "SELECT * FROM public.\"Proveedores\" where id = ?" [toSql key]
 
-getSavCmd :: Proveedor -> Command
-getSavCmd p =
-    Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (fromType p)
+savCmd :: Proveedor -> Command
+savCmd p =
+  Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (fromType p)
+
+getAll :: IO [Proveedor]
+getAll = map toType <$> execSelQuery selCmd
+
+getProveedor :: [[SqlValue]] -> Maybe Proveedor
+getProveedor rows =
+  case rows of [x] -> Just (toType x)
+               _  -> Nothing
+
+getOne :: Int -> IO (Maybe Proveedor)
+getOne key = getProveedor <$> execSelQuery (selOneCmd key)
 
 save :: Proveedor -> IO Integer
 save p =
-  execNonSelQuery (getSavCmd p)
+  execNonSelQuery (savCmd p)

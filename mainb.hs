@@ -15,5 +15,6 @@ nuevo =
 
 main = do
   --save nuevo
-  json <- encode <$> getAll
+  --json <- encode <$> getAll
+  json <- encode <$> getOne 41
   putStrLn $ show json
