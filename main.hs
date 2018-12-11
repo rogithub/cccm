@@ -23,7 +23,7 @@ getOkJSON payload = do
                              , ("Access-Control-Allow-Headers", "Accept, Content-Type")
                              , ("Access-Control-Allow-Methods", "GET, HEAD, POST, DELETE, OPTIONS, PUT, PATCH")
                              ]
-  ok $ toResponseBS (C.pack "application/json") (json)
+  ok $ toResponseBS (C.pack "application/json") json
 
 handlers :: ServerPart Response
 handlers =
