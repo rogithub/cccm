@@ -58,8 +58,7 @@ proveedoresPutOne key = do
         Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
         Nothing     -> Nothing
   do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show proveedor))
-  let intKey = read key :: Int
-  okJSON (getOne intKey)
+  okJSON (update proveedor)
 
 
 handlers :: ServerPart Response

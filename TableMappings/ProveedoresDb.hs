@@ -2,7 +2,8 @@ module TableMappings.ProveedoresDb
 (
   getAll,
   getOne,
-  save
+  save,
+  update
 ) where
 
 import Database.HDBC
@@ -28,7 +29,8 @@ fromType p =
   toSql $ telefono p,
   toSql $ email  p,
   toSql $ comentarios p,
-  toSql $ activo p]
+  toSql $ activo p,
+  toSql $ idProveedor p]
 
 selCmd :: Command
 selCmd =
@@ -41,6 +43,10 @@ selOneCmd key =
 savCmd :: Proveedor -> Command
 savCmd p =
   Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (fromType p)
+
+updateCmd :: Proveedor -> Command
+updateCmd p =
+  Command "UPDATE public.\"Proveedores\" SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where id=?" (fromType p)
 
 getAll :: IO [Proveedor]
 getAll = map toType <$> execSelQuery selCmd
@@ -56,3 +62,7 @@ getOne key = getProveedor <$> execSelQuery (selOneCmd key)
 save :: Proveedor -> IO Integer
 save p =
   execNonSelQuery (savCmd p)
+
+update :: (Maybe Proveedor) -> IO Integer
+update Nothing  = return 0
+update (Just p) = execNonSelQuery (updateCmd p)
