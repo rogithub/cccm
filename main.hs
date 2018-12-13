@@ -1,5 +1,6 @@
 module Main where
 
+import System.IO as S
 import Tipos.Proveedor
 import TableMappings.ProveedoresDb
 import Control.Monad              ( msum )
@@ -8,7 +9,7 @@ import Data.ByteString.Char8 as C
 import Data.ByteString.Lazy as L
 import Data.Aeson
 import Happstack.Server           (Response, ServerPart, Method(GET, POST),
-                                  dirs, method, nullConf, ok, look,
+                                  dir, method, nullConf, ok, look, path,
                                   toResponseBS, simpleHTTP, setHeaderM)
 
 main :: IO ()
@@ -25,18 +26,19 @@ getOkJSON payload = do
                              ]
   ok $ toResponseBS (C.pack "application/json") json
 
-proveedoresListing :: ServerPart Response
-proveedoresListing = do
+proveedoresGetAll :: ServerPart Response
+proveedoresGetAll = do
+  do liftIO $ S.putStrLn ("[GET] proveedores")
   getOkJSON getAll
 
-proveedoresOne :: ServerPart Response
-proveedoresOne = do
-  key <- look "id"
+proveedoresGetOne :: String -> ServerPart Response
+proveedoresGetOne key = do
+  do liftIO $ S.putStrLn ("[GET] proveedores/" ++ key)
   let intKey = read key :: Int
   getOkJSON (getOne intKey)
 
 handlers :: ServerPart Response
 handlers =
-  msum [ dirs "proveedores/lista" $ proveedoresListing
-       , dirs "proveedores" $ proveedoresOne
+  msum [ dir "proveedores" $ path proveedoresGetOne
+       , dir "proveedores" $ proveedoresGetAll
        ]
