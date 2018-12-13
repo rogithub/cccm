@@ -14,7 +14,7 @@ import Happstack.Server           (Response, ServerPart, Request, RqBody, rqBody
                                   Method(GET, HEAD, POST, PUT, OPTIONS),
                                   BodyPolicy(..), decodeBody, defaultBodyPolicy,
                                   dir, method, nullConf, ok, look, path,
-                                  toResponse, body, askRq,
+                                  toResponse, body, askRq, unBody,
                                   toResponseBS, simpleHTTP, setHeaderM)
 
 main :: IO ()
@@ -54,7 +54,10 @@ proveedoresPutOne key = do
   method [OPTIONS, PUT]
   req  <- askRq
   body <- liftIO $ peekRequestBody req
-  do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show body))
+  let proveedor = case body of
+        Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
+        Nothing     -> Nothing
+  do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show proveedor))
   let intKey = read key :: Int
   okJSON (getOne intKey)
 
