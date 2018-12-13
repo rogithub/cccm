@@ -1,23 +1,33 @@
 module Main where
 
+import Control.Applicative ((<$>), (<*>), optional)
+import Control.Concurrent.MVar (tryReadMVar)
 import System.IO as S
 import Tipos.Proveedor
 import TableMappings.ProveedoresDb
 import Control.Monad              ( msum )
-import Control.Monad.IO.Class     ( liftIO )
+import Control.Monad.IO.Class     ( liftIO, MonadIO )
 import Data.ByteString.Char8 as C
 import Data.ByteString.Lazy as L
 import Data.Aeson
-import Happstack.Server           (Response, ServerPart, Method(GET, POST),
+import Happstack.Server           (Response, ServerPart, Request, RqBody, rqBody,
+                                  Method(GET, HEAD, POST, PUT, OPTIONS),
+                                  BodyPolicy(..), decodeBody, defaultBodyPolicy,
                                   dir, method, nullConf, ok, look, path,
+                                  toResponse, body, askRq,
                                   toResponseBS, simpleHTTP, setHeaderM)
 
 main :: IO ()
 main = simpleHTTP nullConf $ handlers
 
-getOkJSON :: (ToJSON a) => IO a -> ServerPart Response
-getOkJSON payload = do
-  method GET
+myPolicy :: BodyPolicy
+myPolicy = (defaultBodyPolicy "/tmp/" 0 1000 1000)
+
+peekRequestBody :: (MonadIO m) => Request -> m (Maybe RqBody)
+peekRequestBody rq = liftIO $ tryReadMVar (rqBody rq)
+
+okJSON :: (ToJSON a) => IO a -> ServerPart Response
+okJSON payload = do
   newMonad <- liftIO payload
   let json = encode newMonad
   mapM_ (uncurry setHeaderM) [ ("Access-Control-Allow-Origin", "*")
@@ -28,17 +38,31 @@ getOkJSON payload = do
 
 proveedoresGetAll :: ServerPart Response
 proveedoresGetAll = do
+  method [GET, HEAD]
   do liftIO $ S.putStrLn ("[GET] proveedores")
-  getOkJSON getAll
+  okJSON getAll
 
 proveedoresGetOne :: String -> ServerPart Response
 proveedoresGetOne key = do
+  method [GET, HEAD]
   do liftIO $ S.putStrLn ("[GET] proveedores/" ++ key)
   let intKey = read key :: Int
-  getOkJSON (getOne intKey)
+  okJSON (getOne intKey)
+
+proveedoresPutOne :: String -> ServerPart Response
+proveedoresPutOne key = do
+  method [OPTIONS, PUT]
+  req  <- askRq
+  body <- liftIO $ peekRequestBody req
+  do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show body))
+  let intKey = read key :: Int
+  okJSON (getOne intKey)
+
 
 handlers :: ServerPart Response
-handlers =
+handlers = do
+  decodeBody myPolicy
   msum [ dir "proveedores" $ path proveedoresGetOne
+       , dir "proveedores" $ path proveedoresPutOne
        , dir "proveedores" $ proveedoresGetAll
        ]
