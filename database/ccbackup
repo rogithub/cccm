@@ -1,0 +1,200 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.1 (Debian 11.1-1.pgdg90+1)
+-- Dumped by pg_dump version 11.1 (Debian 11.1-1.pgdg90+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: Movimiento; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public."Movimiento" AS ENUM (
+    'Entrada',
+    'Salida'
+);
+
+
+ALTER TYPE public."Movimiento" OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: Productos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Productos" (
+    id bigint NOT NULL,
+    nombre character varying(500),
+    color character varying(300),
+    unidad character varying(300),
+    marca character varying(300),
+    modelo character varying(300),
+    comentarios character varying(500)
+);
+
+
+ALTER TABLE public."Productos" OWNER TO postgres;
+
+--
+-- Name: Proveedores; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Proveedores" (
+    id bigint NOT NULL,
+    empresa character varying(255),
+    contacto character varying(255),
+    domicilio character varying(255),
+    telefono character varying(100),
+    email character varying(100),
+    comentarios character varying(500),
+    activo boolean
+);
+
+
+ALTER TABLE public."Proveedores" OWNER TO postgres;
+
+--
+-- Name: Proveedores_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Proveedores_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Proveedores_id_seq" OWNER TO postgres;
+
+--
+-- Name: Proveedores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Proveedores_id_seq" OWNED BY public."Proveedores".id;
+
+
+--
+-- Name: Stocks; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Stocks" (
+    id bigint NOT NULL,
+    "productoId" bigint,
+    "proveedorId" bigint,
+    cantidad numeric(18,8),
+    precio numeric(18,8),
+    fecha timestamp without time zone,
+    movimiento public."Movimiento"
+);
+
+
+ALTER TABLE public."Stocks" OWNER TO postgres;
+
+--
+-- Name: Proveedores id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Proveedores" ALTER COLUMN id SET DEFAULT nextval('public."Proveedores_id_seq"'::regclass);
+
+
+--
+-- Data for Name: Productos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Productos" (id, nombre, color, unidad, marca, modelo, comentarios) FROM stdin;
+\.
+
+
+--
+-- Data for Name: Proveedores; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Proveedores" (id, empresa, contacto, domicilio, telefono, email, comentarios, activo) FROM stdin;
+74	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+77	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+79	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+80	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+81	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+78	La Poderosa	Rodrigo's	Juarez 1000	4521329604	correo.rodrigo@gmail.com	La poderosa es la mejor	t
+41	Liconsass	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+76	La 76	Rodrigo		4521329604	correo.rodrigo@gmail.com	empresa numero 76	t
+72	La empresa 72	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	la 72	t
+73	Cocolilo	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+75	Lecheria Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
+82	Cochiloco	Juan Cochiloco Martinez	Privada del cochiloco, fracionamiento el mirador. Uruapan Michoacán, México.	452-132-96-04	cochi@loco.com		t
+\.
+
+
+--
+-- Data for Name: Stocks; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Stocks" (id, "productoId", "proveedorId", cantidad, precio, fecha, movimiento) FROM stdin;
+\.
+
+
+--
+-- Name: Proveedores_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Proveedores_id_seq"', 82, true);
+
+
+--
+-- Name: Productos Productos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Productos"
+    ADD CONSTRAINT "Productos_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Proveedores Proveedores_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Proveedores"
+    ADD CONSTRAINT "Proveedores_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Stocks Stocks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Stocks"
+    ADD CONSTRAINT "Stocks_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Stocks Stocks_productoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Stocks"
+    ADD CONSTRAINT "Stocks_productoId_fkey" FOREIGN KEY ("productoId") REFERENCES public."Productos"(id);
+
+
+--
+-- Name: Stocks Stocks_proveedorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Stocks"
+    ADD CONSTRAINT "Stocks_proveedorId_fkey" FOREIGN KEY ("proveedorId") REFERENCES public."Proveedores"(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
