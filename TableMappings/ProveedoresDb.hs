@@ -59,9 +59,9 @@ getProveedor rows =
 getOne :: Int -> IO (Maybe Proveedor)
 getOne key = getProveedor <$> execSelQuery (selOneCmd key)
 
-save :: Proveedor -> IO Integer
-save p =
-  execNonSelQuery (savCmd p)
+save :: (Maybe Proveedor) -> IO Integer
+save Nothing  = return 0
+save (Just p) = execNonSelQuery (savCmd p)
 
 update :: (Maybe Proveedor) -> IO Integer
 update Nothing  = return 0

@@ -42,15 +42,15 @@ proveedoresGetAll = do
   do liftIO $ S.putStrLn ("[GET] proveedores")
   okJSON getAll
 
-proveedoresGetOne :: String -> ServerPart Response
-proveedoresGetOne key = do
+proveedoresGet :: String -> ServerPart Response
+proveedoresGet key = do
   method [GET, HEAD]
   do liftIO $ S.putStrLn ("[GET] proveedores/" ++ key)
   let intKey = read key :: Int
   okJSON (getOne intKey)
 
-proveedoresPutOne :: String -> ServerPart Response
-proveedoresPutOne key = do
+proveedoresPut :: String -> ServerPart Response
+proveedoresPut key = do
   method [OPTIONS, PUT]
   req  <- askRq
   body <- liftIO $ peekRequestBody req
@@ -60,11 +60,23 @@ proveedoresPutOne key = do
   do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show proveedor))
   okJSON (update proveedor)
 
+proveedoresPost :: ServerPart Response
+proveedoresPost = do
+  method [OPTIONS, POST]
+  req  <- askRq
+  body <- liftIO $ peekRequestBody req
+  let proveedor = case body of
+        Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
+        Nothing     -> Nothing
+  do liftIO $ S.putStrLn ("[POST] proveedores/" ++ (show proveedor))
+  okJSON (save proveedor)
+
 
 handlers :: ServerPart Response
 handlers = do
   decodeBody myPolicy
-  msum [ dir "proveedores" $ path proveedoresGetOne
-       , dir "proveedores" $ path proveedoresPutOne
+  msum [ dir "proveedores" $ path proveedoresGet
+       , dir "proveedores" $ path proveedoresPut
+       , dir "proveedores" $ proveedoresPost
        , dir "proveedores" $ proveedoresGetAll
        ]
