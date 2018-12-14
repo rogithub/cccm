@@ -34,7 +34,7 @@ fromType p =
 
 selCmd :: Command
 selCmd =
-  Command "SELECT * FROM public.\"Proveedores\"" []
+  Command "SELECT * FROM public.\"Proveedores\" where activo = ? ORDER BY id" [toSql True]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -42,7 +42,7 @@ selOneCmd key =
 
 savCmd :: Proveedor -> Command
 savCmd p =
-  Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (fromType p)
+  Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
 
 updateCmd :: Proveedor -> Command
 updateCmd p =
