@@ -42,7 +42,8 @@ CREATE TABLE public."Productos" (
     unidad character varying(300),
     marca character varying(300),
     modelo character varying(300),
-    comentarios character varying(500)
+    comentarios character varying(500),
+    activo boolean
 );
 
 
@@ -115,7 +116,7 @@ ALTER TABLE ONLY public."Proveedores" ALTER COLUMN id SET DEFAULT nextval('publi
 -- Data for Name: Productos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Productos" (id, nombre, color, unidad, marca, modelo, comentarios) FROM stdin;
+COPY public."Productos" (id, nombre, color, unidad, marca, modelo, comentarios, activo) FROM stdin;
 \.
 
 
@@ -124,18 +125,18 @@ COPY public."Productos" (id, nombre, color, unidad, marca, modelo, comentarios) 
 --
 
 COPY public."Proveedores" (id, empresa, contacto, domicilio, telefono, email, comentarios, activo) FROM stdin;
-74	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
-77	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
-79	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
 80	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
 81	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
-78	La Poderosa	Rodrigo's	Juarez 1000	4521329604	correo.rodrigo@gmail.com	La poderosa es la mejor	t
-41	Liconsass	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
-76	La 76	Rodrigo		4521329604	correo.rodrigo@gmail.com	empresa numero 76	t
-72	La empresa 72	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	la 72	t
-73	Cocolilo	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
-75	Lecheria Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	t
 82	Cochiloco	Juan Cochiloco Martinez	Privada del cochiloco, fracionamiento el mirador. Uruapan Michoacán, México.	452-132-96-04	cochi@loco.com		t
+41	Liconsass	Rodrigo	Privada de Diligencais #56 Fraccioneamiento El Mirador C.P. 60185.\nUruapan Michoacán, México.	4521329604	correo.rodrigo@gmail.com	columnas financieras	f
+72	La empresa 72	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	la 72	f
+73	Cocolilo	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	f
+74	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	f
+75	Lecheria Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	f
+76	La 76	Rodrigo		4521329604	correo.rodrigo@gmail.com	empresa numero 76	f
+77	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	f
+78	La Poderosa	Rodrigo's	Juarez 1000	4521329604	correo.rodrigo@gmail.com	La poderosa es la mejor	f
+79	Liconsa	Rodrigo	Juarez 1000	4521329604	correo.rodrigo@gmail.com	chido cabron	f
 \.
 
 
