@@ -12,6 +12,7 @@ data Producto = Producto { idProducto :: Int
                , marca :: String
                , modelo :: String
                , comentarios :: String
+               , activo :: Bool
                } deriving (Generic, Show)
 instance ToJSON Producto where
  toEncoding = genericToEncoding defaultOptions
