@@ -1,15 +1,12 @@
 module Main where
 
-import Control.Applicative ((<$>), (<*>), optional)
-import Controllers.Proveedores
+import Controllers.Proveedores as Proveedores
+import Controllers.Productos as Productos
 import Control.Monad              ( msum )
-import Control.Monad.IO.Class     ( liftIO, MonadIO )
-import Happstack.Server           (Response, ServerPart, Request, RqBody, rqBody,
-                                  Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
-                                  BodyPolicy(..), decodeBody, defaultBodyPolicy,
-                                  dir, method, nullConf, ok, look, path,
-                                  toResponse, body, askRq, unBody,
-                                  toResponseBS, simpleHTTP, setHeaderM)
+import Happstack.Server           (Response, ServerPart,
+                                  BodyPolicy(..), defaultBodyPolicy,
+                                  decodeBody, dir, nullConf, path,
+                                  simpleHTTP)
 
 main :: IO ()
 main = simpleHTTP nullConf $ handlers
@@ -20,9 +17,15 @@ myPolicy = (defaultBodyPolicy "/tmp/" 0 1000 1000)
 handlers :: ServerPart Response
 handlers = do
   decodeBody myPolicy
-  msum [ dir "proveedores" $ path proveedoresGet
-       , dir "proveedores" $ path proveedoresPut
-       , dir "proveedores" $ path proveedoresDel
-       , dir "proveedores" $ proveedoresPost
-       , dir "proveedores" $ proveedoresGetAll
+  msum [ dir "proveedores" $ path Proveedores.get
+       , dir "proveedores" $ path Proveedores.put
+       , dir "proveedores" $ path Proveedores.del
+       , dir "proveedores" $ Proveedores.post
+       , dir "proveedores" $ Proveedores.allGet
+
+       , dir "materiales" $ path Productos.get
+       , dir "materiales" $ path Productos.put
+       , dir "materiales" $ path Productos.del
+       , dir "materiales" $ Productos.post
+       , dir "materiales" $ Productos.allGet
        ]

@@ -1,4 +1,4 @@
-module Controllers.Proveedores
+module Controllers.Productos
 (
   allGet,
   get,
@@ -10,8 +10,8 @@ module Controllers.Proveedores
 import System.IO as S
 import Data.Aeson
 import Controllers.Helper
-import Tipos.Proveedor
-import TableMappings.ProveedoresDb as Db
+import Tipos.Producto
+import TableMappings.ProductosDb as Db
 import Happstack.Server           (Response, ServerPart, method,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   askRq, unBody, RqBody, rqBody)
@@ -20,13 +20,13 @@ import Control.Monad.IO.Class     ( liftIO )
 allGet :: ServerPart Response
 allGet = do
   method [GET, HEAD]
-  do liftIO $ S.putStrLn ("[GET] proveedores")
+  do liftIO $ S.putStrLn ("[GET] materiales")
   okJSON Db.getAll
 
 get :: String -> ServerPart Response
 get key = do
   method [GET, HEAD]
-  do liftIO $ S.putStrLn ("[GET] proveedores/" ++ key)
+  do liftIO $ S.putStrLn ("[GET] materiales/" ++ key)
   let intKey = read key :: Int
   okJSON (Db.getOne intKey)
 
@@ -35,26 +35,26 @@ put key = do
   method [OPTIONS, PUT]
   req  <- askRq
   body <- liftIO $ peekRequestBody req
-  let proveedor = case body of
-        Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
+  let producto = case body of
+        Just rqbody -> decode (unBody rqbody) :: Maybe Producto
         Nothing     -> Nothing
-  do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show proveedor))
-  okJSON (Db.update proveedor)
+  do liftIO $ S.putStrLn ("[PUT] materiales/" ++ (show producto))
+  okJSON (Db.update producto)
 
 post :: ServerPart Response
 post = do
   method [OPTIONS, POST]
   req  <- askRq
   body <- liftIO $ peekRequestBody req
-  let proveedor = case body of
-        Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
+  let producto = case body of
+        Just rqbody -> decode (unBody rqbody) :: Maybe Producto
         Nothing     -> Nothing
-  do liftIO $ S.putStrLn ("[POST] proveedores/" ++ (show proveedor))
-  okJSON (Db.save proveedor)
+  do liftIO $ S.putStrLn ("[POST] materiales/" ++ (show producto))
+  okJSON (Db.save producto)
 
 del :: String -> ServerPart Response
 del key = do
   method [OPTIONS, DELETE]
-  do liftIO $ S.putStrLn ("[DELETE] proveedores/" ++ key)
+  do liftIO $ S.putStrLn ("[DELETE] materiales/" ++ key)
   let intKey = read key :: Int
   okJSON (Db.delete intKey)
