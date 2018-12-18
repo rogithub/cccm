@@ -11,7 +11,7 @@ import Data.ByteString.Char8 as C
 import Data.ByteString.Lazy as L
 import Data.Aeson
 import Happstack.Server           (Response, ServerPart, Request, RqBody, rqBody,
-                                  Method(GET, HEAD, POST, PUT, OPTIONS),
+                                  Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   BodyPolicy(..), decodeBody, defaultBodyPolicy,
                                   dir, method, nullConf, ok, look, path,
                                   toResponse, body, askRq, unBody,
@@ -71,12 +71,19 @@ proveedoresPost = do
   do liftIO $ S.putStrLn ("[POST] proveedores/" ++ (show proveedor))
   okJSON (save proveedor)
 
+proveedoresDel :: String -> ServerPart Response
+proveedoresDel key = do
+  method [OPTIONS, DELETE]
+  do liftIO $ S.putStrLn ("[DELETE] proveedores/" ++ key)
+  let intKey = read key :: Int
+  okJSON (delete intKey)
 
 handlers :: ServerPart Response
 handlers = do
   decodeBody myPolicy
   msum [ dir "proveedores" $ path proveedoresGet
        , dir "proveedores" $ path proveedoresPut
+       , dir "proveedores" $ path proveedoresDel
        , dir "proveedores" $ proveedoresPost
        , dir "proveedores" $ proveedoresGetAll
        ]
