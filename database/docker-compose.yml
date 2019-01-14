@@ -1,9 +1,0 @@
-version: "3"
-services:
-  postgres:
-    image: "postgres"
-    container_name: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - /home/ro/Databases/postgres:/var/lib/postgresql/data

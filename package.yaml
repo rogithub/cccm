@@ -1,0 +1,54 @@
+name:                cccm
+version:             0.1.0.0
+github:              "rogithub/cccm"
+license:             BSD3
+author:              "Rodrigo Jimenez"
+maintainer:          "correo.rodrigo@gmail.com"
+copyright:           "Copyright (c) 2019 Rodrigo Jimenez"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            web api
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/rogithub/cccm#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- HDBC
+- HDBC-postgresql
+- happstack-server
+- bytestring 
+- aeson
+- time
+
+library:
+  source-dirs: src
+
+executables:
+  cccm-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - cccm
+
+tests:
+  cccm-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - cccm
