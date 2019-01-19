@@ -11,7 +11,7 @@ import Database.HDBC
 import Database.HDBC.PostgreSQL
 
 defaultConnStr :: String
-defaultConnStr = "host=localhost dbname=cc user=postgres"
+defaultConnStr = "host=postgres dbname=cc user=postgres"
 
 getCon :: IO Connection
 getCon = connectPostgreSQL defaultConnStr
