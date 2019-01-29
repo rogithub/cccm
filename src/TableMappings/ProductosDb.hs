@@ -10,6 +10,7 @@ module TableMappings.ProductosDb
 import Database.HDBC
 import DataAccess.Commands
 import Tipos.Producto
+import Tipos.PageResult
 
 toType :: [SqlValue] -> Producto
 toType sqlVal =
@@ -21,6 +22,10 @@ toType sqlVal =
     modelo = fromSql (sqlVal!!5)::String,
     comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
+
+getTotalRows :: [[SqlValue]] -> Int
+getTotalRows [[]] = 0
+getTotalRows (first:rest) = fromSql (first!!8)::Int
 
 fromType :: Producto -> [SqlValue]
 fromType p =
@@ -54,11 +59,10 @@ deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE public.\"Productos\" SET activo=? where id=?" [toSql False, toSql key]
 
-getAll :: Int -> Int -> IO [Producto]
+getAll :: Int -> Int -> IO (PageResult Producto)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  --map toType <$> execSelQuery selCmd
-  return (map toType rows)
+  return (PageResult (map toType rows) (getTotalRows rows))
 
 getProducto :: [[SqlValue]] -> Maybe Producto
 getProducto rows =
