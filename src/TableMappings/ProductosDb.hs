@@ -33,9 +33,9 @@ fromType p =
   toSql $ activo p,
   toSql $ idProducto p]
 
-selCmd :: Command
-selCmd =
-  Command "SELECT * FROM public.\"Productos\" where activo = ? ORDER BY id" [toSql True]
+selCmd :: Int -> Int -> Command
+selCmd offset pageSize =
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Productos\" WHERE activo=? ORDER BY ID OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -54,8 +54,11 @@ deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE public.\"Productos\" SET activo=? where id=?" [toSql False, toSql key]
 
-getAll :: IO [Producto]
-getAll = map toType <$> execSelQuery selCmd
+getAll :: Int -> Int -> IO [Producto]
+getAll offset pageSize = do
+  rows <- execSelQuery (selCmd offset pageSize)
+  --map toType <$> execSelQuery selCmd
+  return (map toType rows)
 
 getProducto :: [[SqlValue]] -> Maybe Producto
 getProducto rows =

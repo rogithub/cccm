@@ -21,7 +21,7 @@ allGet :: ServerPart Response
 allGet = do
   method [GET, HEAD]
   do liftIO $ S.putStrLn ("[GET] materiales")
-  okJSON Db.getAll
+  okJSON (Db.getAll 0 5)
 
 get :: String -> ServerPart Response
 get key = do
