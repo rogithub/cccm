@@ -12,7 +12,7 @@ import Data.Aeson
 import Controllers.Helper
 import Tipos.Producto
 import TableMappings.ProductosDb as Db
-import Happstack.Server           (Response, ServerPart, method,
+import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   askRq, unBody, RqBody, rqBody)
 import Control.Monad.IO.Class     ( liftIO )
@@ -20,8 +20,10 @@ import Control.Monad.IO.Class     ( liftIO )
 allGet :: ServerPart Response
 allGet = do
   method [GET, HEAD]
-  do liftIO $ S.putStrLn ("[GET] materiales")
-  okJSON (Db.getAll 0 5)
+  offset <- look "offset"
+  pageSize <- look "pageSize"
+  do liftIO $ S.putStrLn ("[GET] materiales?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize)
+  okJSON (Db.getAll (read offset::Int) (read pageSize::Int))
 
 get :: String -> ServerPart Response
 get key = do
