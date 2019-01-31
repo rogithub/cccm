@@ -58,7 +58,7 @@ deleteCmd key =
 getAll :: Int -> Int -> IO (PageResult Producto)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  return (PageResult (map toType rows) (getIntOrZero rows 8))
+  return (PageResult (map toType rows) (getFstIntOrZero rows 8))
 
 getProducto :: [[SqlValue]] -> Maybe Producto
 getProducto rows =
