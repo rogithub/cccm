@@ -9,7 +9,9 @@ module TableMappings.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
+import TableMappings.QueryHelpers
 import Tipos.Proveedor
+import Tipos.PageResult
 
 toType :: [SqlValue] -> Proveedor
 toType sqlVal =
@@ -33,9 +35,9 @@ fromType p =
   toSql $ activo p,
   toSql $ idProveedor p]
 
-selCmd :: Command
-selCmd =
-  Command "SELECT * FROM public.\"Proveedores\" where activo = ? ORDER BY id" [toSql True]
+selCmd :: Int -> Int -> Command
+selCmd offset pageSize =
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -53,9 +55,10 @@ deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE public.\"Proveedores\" SET activo=? where id=?" [toSql False, toSql key]
 
-
-getAll :: IO [Proveedor]
-getAll = map toType <$> execSelQuery selCmd
+getAll :: Int -> Int -> IO (PageResult Proveedor)
+getAll offset pageSize = do
+  rows <- execSelQuery (selCmd offset pageSize)
+  return (PageResult (map toType rows) (getTotalRows rows 8))
 
 getProveedor :: [[SqlValue]] -> Maybe Proveedor
 getProveedor rows =

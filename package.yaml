@@ -24,7 +24,7 @@ dependencies:
 - HDBC
 - HDBC-postgresql
 - happstack-server
-- bytestring 
+- bytestring
 - aeson
 - time
 

@@ -12,7 +12,7 @@ import Data.Aeson
 import Controllers.Helper
 import Tipos.Proveedor
 import TableMappings.ProveedoresDb as Db
-import Happstack.Server           (Response, ServerPart, method,
+import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   askRq, unBody, RqBody, rqBody)
 import Control.Monad.IO.Class     ( liftIO )
@@ -20,8 +20,10 @@ import Control.Monad.IO.Class     ( liftIO )
 allGet :: ServerPart Response
 allGet = do
   method [GET, HEAD]
-  do liftIO $ S.putStrLn ("[GET] proveedores")
-  okJSON Db.getAll
+  offset <- look "offset"
+  pageSize <- look "pageSize"
+  do liftIO $ S.putStrLn ("[GET] proveedores?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize)
+  okJSON (Db.getAll (read offset::Int) (read pageSize::Int))
 
 get :: String -> ServerPart Response
 get key = do

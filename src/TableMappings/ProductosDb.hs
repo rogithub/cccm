@@ -11,6 +11,7 @@ import Database.HDBC
 import DataAccess.Commands
 import Tipos.Producto
 import Tipos.PageResult
+import TableMappings.QueryHelpers
 
 toType :: [SqlValue] -> Producto
 toType sqlVal =
@@ -22,10 +23,6 @@ toType sqlVal =
     modelo = fromSql (sqlVal!!5)::String,
     comentarios = fromSql (sqlVal!!6)::String,
     activo = fromSql (sqlVal!!7)::Bool }
-
-getTotalRows :: [[SqlValue]] -> Int
-getTotalRows [[]] = 0
-getTotalRows (first:rest) = fromSql (first!!8)::Int
 
 fromType :: Producto -> [SqlValue]
 fromType p =
@@ -46,7 +43,6 @@ selOneCmd :: Int -> Command
 selOneCmd key =
   Command "SELECT * FROM public.\"Productos\" where id = ?" [toSql key]
 
-
 savCmd :: Producto -> Command
 savCmd p =
   Command "INSERT INTO public.\"Productos\" (nombre, color, unidad, marca, modelo, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
@@ -62,7 +58,7 @@ deleteCmd key =
 getAll :: Int -> Int -> IO (PageResult Producto)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  return (PageResult (map toType rows) (getTotalRows rows))
+  return (PageResult (map toType rows) (getTotalRows rows 8))
 
 getProducto :: [[SqlValue]] -> Maybe Producto
 getProducto rows =
