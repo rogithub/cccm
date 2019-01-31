@@ -10,14 +10,14 @@ import Tipos.Stock
 import Data.Time.Calendar
 
 toType :: [SqlValue] -> Stock
-toType sqlVal =
-  Stock { idStock = fromSql (sqlVal!!0)::Int,
-    idProducto = fromSql (sqlVal!!1)::Int,
-    idProveedor = fromSql (sqlVal!!2)::Int,
-    cantidad = fromSql (sqlVal!!3)::Double,
-    precio = fromSql (sqlVal!!4)::Double,
-    fecha = fromSql (sqlVal!!5)::Day,
-    movimiento = fromSql (sqlVal!!6)::Int }
+toType row =
+  Stock { idStock = fromSql (row!!0)::Int,
+    idProducto = fromSql (row!!1)::Int,
+    idProveedor = fromSql (row!!2)::Int,
+    cantidad = fromSql (row!!3)::Double,
+    precio = fromSql (row!!4)::Double,
+    fecha = fromSql (row!!5)::Day,
+    movimiento = fromSql (row!!6)::Int }
 
 fromType :: Stock -> [SqlValue]
 fromType p =

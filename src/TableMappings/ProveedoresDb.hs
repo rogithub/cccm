@@ -14,15 +14,15 @@ import Tipos.Proveedor
 import Tipos.PageResult
 
 toType :: [SqlValue] -> Proveedor
-toType sqlVal =
-  Proveedor { idProveedor = fromSql (sqlVal!!0)::Int,
-    empresa = fromSql (sqlVal!!1)::String,
-    contacto = fromSql (sqlVal!!2)::String,
-    domicilio = fromSql (sqlVal!!3)::String,
-    telefono = fromSql (sqlVal!!4)::String,
-    email = fromSql (sqlVal!!5)::String,
-    comentarios = fromSql (sqlVal!!6)::String,
-    activo = fromSql (sqlVal!!7)::Bool }
+toType row =
+  Proveedor { idProveedor = fromSql (row!!0)::Int,
+    empresa = fromSql (row!!1)::String,
+    contacto = fromSql (row!!2)::String,
+    domicilio = fromSql (row!!3)::String,
+    telefono = fromSql (row!!4)::String,
+    email = fromSql (row!!5)::String,
+    comentarios = fromSql (row!!6)::String,
+    activo = fromSql (row!!7)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
 fromType p =

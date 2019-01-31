@@ -14,15 +14,15 @@ import Tipos.PageResult
 import TableMappings.QueryHelpers
 
 toType :: [SqlValue] -> Producto
-toType sqlVal =
-  Producto { idProducto = fromSql (sqlVal!!0)::Int,
-    nombre = fromSql (sqlVal!!1)::String,
-    color = fromSql (sqlVal!!2)::String,
-    unidad = fromSql (sqlVal!!3)::String,
-    marca = fromSql (sqlVal!!4)::String,
-    modelo = fromSql (sqlVal!!5)::String,
-    comentarios = fromSql (sqlVal!!6)::String,
-    activo = fromSql (sqlVal!!7)::Bool }
+toType row =
+  Producto { idProducto = fromSql (row!!0)::Int,
+    nombre = fromSql (row!!1)::String,
+    color = fromSql (row!!2)::String,
+    unidad = fromSql (row!!3)::String,
+    marca = fromSql (row!!4)::String,
+    modelo = fromSql (row!!5)::String,
+    comentarios = fromSql (row!!6)::String,
+    activo = fromSql (row!!7)::Bool }
 
 fromType :: Producto -> [SqlValue]
 fromType p =
