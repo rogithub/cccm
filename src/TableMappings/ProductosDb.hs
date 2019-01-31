@@ -13,16 +13,16 @@ import Tipos.Producto
 import Tipos.PageResult
 import TableMappings.QueryHelpers
 
-toType :: [(String, SqlValue)] -> Producto
-toType tuple =
-  Producto { idProducto = fromSql (snd $ tuple!!0)::Int,
-    nombre = fromSql (snd $ tuple!!1)::String,
-    color = fromSql (snd $ tuple!!2)::String,
-    unidad = fromSql (snd $ tuple!!3)::String,
-    marca = fromSql (snd $ tuple!!4)::String,
-    modelo = fromSql (snd $ tuple!!5)::String,
-    comentarios = fromSql (snd $ tuple!!6)::String,
-    activo = fromSql (snd $ tuple!!7)::Bool }
+toType :: [SqlValue] -> Producto
+toType sqlVal =
+  Producto { idProducto = fromSql (sqlVal!!0)::Int,
+    nombre = fromSql (sqlVal!!1)::String,
+    color = fromSql (sqlVal!!2)::String,
+    unidad = fromSql (sqlVal!!3)::String,
+    marca = fromSql (sqlVal!!4)::String,
+    modelo = fromSql (sqlVal!!5)::String,
+    comentarios = fromSql (sqlVal!!6)::String,
+    activo = fromSql (sqlVal!!7)::Bool }
 
 fromType :: Producto -> [SqlValue]
 fromType p =
@@ -58,9 +58,9 @@ deleteCmd key =
 getAll :: Int -> Int -> IO (PageResult Producto)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  return (PageResult (map toType rows) (getTotalRows rows))
+  return (PageResult (map toType rows) (getTotalRows rows 8))
 
-getProducto :: [[(String, SqlValue)]] -> Maybe Producto
+getProducto :: [[SqlValue]] -> Maybe Producto
 getProducto rows =
   case rows of [x] -> Just (toType x)
                _  -> Nothing

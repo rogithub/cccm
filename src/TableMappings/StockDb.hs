@@ -9,15 +9,15 @@ import DataAccess.Commands
 import Tipos.Stock
 import Data.Time.Calendar
 
-toType :: [(String, SqlValue)] -> Stock
-toType tuple =
-  Stock { idStock = fromSql (snd $ tuple!!0)::Int,
-    idProducto = fromSql (snd $ tuple!!1)::Int,
-    idProveedor = fromSql (snd $ tuple!!2)::Int,
-    cantidad = fromSql (snd $ tuple!!3)::Double,
-    precio = fromSql (snd $ tuple!!4)::Double,
-    fecha = fromSql (snd $ tuple!!5)::Day,
-    movimiento = fromSql (snd $ tuple!!6)::Int }
+toType :: [SqlValue] -> Stock
+toType sqlVal =
+  Stock { idStock = fromSql (sqlVal!!0)::Int,
+    idProducto = fromSql (sqlVal!!1)::Int,
+    idProveedor = fromSql (sqlVal!!2)::Int,
+    cantidad = fromSql (sqlVal!!3)::Double,
+    precio = fromSql (sqlVal!!4)::Double,
+    fecha = fromSql (sqlVal!!5)::Day,
+    movimiento = fromSql (sqlVal!!6)::Int }
 
 fromType :: Stock -> [SqlValue]
 fromType p =

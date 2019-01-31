@@ -13,16 +13,16 @@ import TableMappings.QueryHelpers
 import Tipos.Proveedor
 import Tipos.PageResult
 
-toType :: [(String, SqlValue)] -> Proveedor
-toType tuple =
-  Proveedor { idProveedor = fromSql (snd $ tuple!!0)::Int,
-    empresa = fromSql (snd $ tuple!!1)::String,
-    contacto = fromSql (snd $ tuple!!2)::String,
-    domicilio = fromSql (snd $ tuple!!3)::String,
-    telefono = fromSql (snd $ tuple!!4)::String,
-    email = fromSql (snd $ tuple!!5)::String,
-    comentarios = fromSql (snd $ tuple!!6)::String,
-    activo = fromSql (snd $ tuple!!7)::Bool }
+toType :: [SqlValue] -> Proveedor
+toType sqlVal =
+  Proveedor { idProveedor = fromSql (sqlVal!!0)::Int,
+    empresa = fromSql (sqlVal!!1)::String,
+    contacto = fromSql (sqlVal!!2)::String,
+    domicilio = fromSql (sqlVal!!3)::String,
+    telefono = fromSql (sqlVal!!4)::String,
+    email = fromSql (sqlVal!!5)::String,
+    comentarios = fromSql (sqlVal!!6)::String,
+    activo = fromSql (sqlVal!!7)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
 fromType p =
@@ -37,7 +37,7 @@ fromType p =
 
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]  
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -58,9 +58,9 @@ deleteCmd key =
 getAll :: Int -> Int -> IO (PageResult Proveedor)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  return (PageResult (map toType rows) (getTotalRows rows))
+  return (PageResult (map toType rows) (getTotalRows rows 8))
 
-getProveedor :: [[(String, SqlValue)]] -> Maybe Proveedor
+getProveedor :: [[SqlValue]] -> Maybe Proveedor
 getProveedor rows =
   case rows of [x] -> Just (toType x)
                _  -> Nothing
