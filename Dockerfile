@@ -6,4 +6,5 @@ RUN apt-get update && apt-get install -y \
   ca-certificates \
   libgmp-dev libpq-dev build-essential
 COPY ./.stack-work/dist/x86_64-linux/Cabal-2.4.0.1/build/cccm-exe/cccm-exe /opt/cccm
-CMD CONN_STR=$CONN_STR /opt/cccm/cccm-exe
+ENV CONN_STR=${CONN_STR}
+CMD ["/opt/cccm/cccm-exe"]
