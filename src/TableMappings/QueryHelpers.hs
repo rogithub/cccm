@@ -1,11 +1,15 @@
 module TableMappings.QueryHelpers
 (
-  getTotalRows
+  getIntOrDefault,
+  getIntOrZero
 ) where
 
 import Database.HDBC
 import Data.List
 
-getTotalRows :: [[SqlValue]] -> Int -> Int
-getTotalRows [[]] _   = 0
-getTotalRows (x:xs) i = fromSql (x!!i)::Int
+getIntOrDefault :: Int -> [[SqlValue]] -> Int -> Int
+getIntOrDefault def [[]] _ = def
+getIntOrDefault _ (row:_) i = fromSql (row!!i) :: Int
+
+getIntOrZero :: [[SqlValue]] -> Int -> Int
+getIntOrZero row i = getIntOrDefault 0 row i

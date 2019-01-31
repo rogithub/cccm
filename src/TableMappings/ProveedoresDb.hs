@@ -37,7 +37,7 @@ fromType p =
 
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]  
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -58,7 +58,7 @@ deleteCmd key =
 getAll :: Int -> Int -> IO (PageResult Proveedor)
 getAll offset pageSize = do
   rows <- execSelQuery (selCmd offset pageSize)
-  return (PageResult (map toType rows) (getTotalRows rows 8))
+  return (PageResult (map toType rows) (getIntOrZero rows 8))
 
 getProveedor :: [[SqlValue]] -> Maybe Proveedor
 getProveedor rows =
