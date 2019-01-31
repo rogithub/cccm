@@ -9,12 +9,10 @@ module DataAccess.Db
 import Control.Exception
 import Database.HDBC
 import Database.HDBC.PostgreSQL
-
-defaultConnStr :: String
-defaultConnStr = "host=postgres dbname=cc user=postgres"
+import System.Environment
 
 getCon :: IO Connection
-getCon = connectPostgreSQL defaultConnStr
+getCon = connectPostgreSQL =<< getEnv "CONN_STR"
 
 execNonSel :: Connection -> String -> [SqlValue] -> IO Integer
 execNonSel conn sqlCmdStr sqlVals = do

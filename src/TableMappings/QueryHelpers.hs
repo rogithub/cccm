@@ -16,5 +16,5 @@ getIntOrZero :: [SqlValue] -> Int -> Int
 getIntOrZero row i = getIntOrDefault 0 row i
 
 getFstIntOrZero :: [[SqlValue]] -> Int -> Int
-getFstIntOrZero [[]] _ = 0
+getFstIntOrZero [] _ = 0
 getFstIntOrZero (row:_) i = getIntOrZero row i
