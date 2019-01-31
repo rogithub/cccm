@@ -10,7 +10,7 @@ import DataAccess.Db
 
 data Command = Command String [SqlValue] deriving (Show)
 
-execSelQuery :: Command -> IO [[SqlValue]]
+execSelQuery :: Command -> IO [[(String, SqlValue)]]
 execSelQuery (Command sql params) =
   execQuery (\conn -> execSel conn sql params)
 

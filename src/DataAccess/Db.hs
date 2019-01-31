@@ -22,11 +22,11 @@ execNonSel conn sqlCmdStr sqlVals = do
   rowCount <- execute state sqlVals
   return rowCount
 
-execSel :: Connection -> String -> [SqlValue] -> IO [[SqlValue]]
+execSel :: Connection -> String -> [SqlValue] -> IO [[(String, SqlValue)]]
 execSel conn sqlCmdStr sqlVals = do
   select <- prepare conn sqlCmdStr
   execute select sqlVals
-  result <- fetchAllRows' select
+  result <-  fetchAllRowsAL' select
   return result
 
 execQuery :: (Connection -> IO a) -> IO a
