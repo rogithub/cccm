@@ -2,7 +2,7 @@
 ```
 $ stack build
 ```
-# run
+# local run
 ```
 $ CONN_STR="host=localhost dbname=cc user=postgres" stack --no-nix-pure exec cccm-exe
 ```
@@ -13,6 +13,5 @@ http://localhost:8000
 
 ## docker buld
 ```
-$ cd build
-$ make -f Makefile
+$ make
 ```
