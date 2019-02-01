@@ -4,7 +4,7 @@ $ stack build
 ```
 # run
 ```
-$ stack exec cccm-exe
+$ CONN_STR="host=localhost dbname=cc user=postgres" stack --no-nix-pure exec cccm-exe
 ```
 ## Listening on
 ```
@@ -15,9 +15,4 @@ http://localhost:8000
 ```
 $ cd build
 $ make -f Makefile
-```
-
-## docker ENV
-```
-$ CONN_STR="host=localhost dbname=cc user=postgres" stack --no-nix-pure exec cccm-exe
 ```
