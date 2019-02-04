@@ -15,6 +15,7 @@ data Stock = Stock { idStock :: Int
               , precio :: Double
               , fecha :: Day
               , movimiento :: Int
+              , activo :: Bool
               } deriving (Generic, Show)
 instance ToJSON Stock where
  toEncoding = genericToEncoding defaultOptions
