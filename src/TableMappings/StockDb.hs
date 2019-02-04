@@ -9,7 +9,7 @@ module TableMappings.StockDb
 
 import Database.HDBC
 import DataAccess.Commands
-import TableMappings.QueryHelpers
+import DataAccess.ValueHelpers
 import Tipos.Stock
 import Data.Time.Calendar
 import Tipos.PageResult

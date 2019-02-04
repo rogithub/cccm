@@ -1,4 +1,4 @@
-module TableMappings.QueryHelpers
+module DataAccess.ValueHelpers
 (
   getIntOrDefault,
   getIntOrZero,

@@ -11,7 +11,7 @@ import Database.HDBC
 import DataAccess.Commands
 import Tipos.Producto
 import Tipos.PageResult
-import TableMappings.QueryHelpers
+import DataAccess.ValueHelpers
 
 toType :: [SqlValue] -> Producto
 toType row =

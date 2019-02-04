@@ -9,7 +9,7 @@ module TableMappings.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
-import TableMappings.QueryHelpers
+import DataAccess.ValueHelpers
 import Tipos.Proveedor
 import Tipos.PageResult
 
