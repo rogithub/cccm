@@ -4,6 +4,7 @@ module Lib
 
 import Controllers.Proveedores as Proveedores
 import Controllers.Productos as Productos
+import Controllers.Inventarios as Inventarios
 import Control.Monad              ( msum )
 import Happstack.Server           (Response, ServerPart,
                                   BodyPolicy(..), defaultBodyPolicy,
@@ -30,4 +31,10 @@ handlers = do
        , dir "materiales" $ path Productos.del
        , dir "materiales" $ Productos.post
        , dir "materiales" $ Productos.allGet
+
+       , dir "inventarios" $ path Inventarios.get
+       , dir "inventarios" $ path Inventarios.put
+       , dir "inventarios" $ path Inventarios.del
+       , dir "inventarios" $ Inventarios.post
+       , dir "inventarios" $ Inventarios.allGet
        ]
