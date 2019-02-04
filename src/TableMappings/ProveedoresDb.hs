@@ -18,10 +18,10 @@ toType row =
   Proveedor { idProveedor = fromSql (row!!0)::Int,
     empresa = fromSql (row!!1)::String,
     contacto = fromSql (row!!2)::String,
-    domicilio = fromSql (row!!3)::String,
+    domicilio = fromSql (row!!3)::Maybe String,
     telefono = fromSql (row!!4)::String,
     email = fromSql (row!!5)::String,
-    comentarios = fromSql (row!!6)::String,
+    comentarios = fromSql (row!!6)::Maybe String,
     activo = fromSql (row!!7)::Bool }
 
 fromType :: Proveedor -> [SqlValue]

@@ -8,10 +8,10 @@ import GHC.Generics
 data Proveedor = Proveedor { idProveedor :: Int
               , empresa :: String
               , contacto :: String
-              , domicilio :: String
+              , domicilio :: Maybe String
               , telefono :: String
               , email :: String
-              , comentarios :: String
+              , comentarios :: Maybe String
               , activo :: Bool
               } deriving (Generic, Show)
 instance ToJSON Proveedor where

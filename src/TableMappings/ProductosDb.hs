@@ -19,9 +19,9 @@ toType row =
     nombre = fromSql (row!!1)::String,
     color = fromSql (row!!2)::String,
     unidad = fromSql (row!!3)::String,
-    marca = fromSql (row!!4)::String,
-    modelo = fromSql (row!!5)::String,
-    comentarios = fromSql (row!!6)::String,
+    marca = fromSql (row!!4)::Maybe String,
+    modelo = fromSql (row!!5)::Maybe String,
+    comentarios = fromSql (row!!6)::Maybe String,
     activo = fromSql (row!!7)::Bool }
 
 fromType :: Producto -> [SqlValue]

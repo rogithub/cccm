@@ -9,9 +9,9 @@ data Producto = Producto { idProducto :: Int
                , nombre :: String
                , color :: String
                , unidad :: String
-               , marca :: String
-               , modelo :: String
-               , comentarios :: String
+               , marca :: Maybe String
+               , modelo :: Maybe String
+               , comentarios :: Maybe String
                , activo :: Bool
                } deriving (Generic, Show)
 instance ToJSON Producto where
