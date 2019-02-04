@@ -4,7 +4,8 @@ module TableMappings.ProductosDb
   getOne,
   save,
   update,
-  delete
+  delete,
+  getByName
 ) where
 
 import Database.HDBC
@@ -35,6 +36,10 @@ fromType p =
   toSql $ activo p,
   toSql $ idProducto p]
 
+getByNameCmd :: String -> Command
+getByNameCmd name =
+  Command "SELECT * FROM public.\"Productos\" where name like '%?%' and activo = ? ORDER BY name" [toSql name, toSql True]
+
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =
   Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Productos\" WHERE activo=? ORDER BY ID OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
@@ -54,6 +59,10 @@ updateCmd p =
 deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE public.\"Productos\" SET activo=? where id=?" [toSql False, toSql key]
+
+getByName :: String -> IO [Producto]
+getByName name = do
+  map toType <$> execSelQuery (getByNameCmd name)
 
 getAll :: Int -> Int -> IO (PageResult Producto)
 getAll offset pageSize = do

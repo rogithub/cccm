@@ -4,7 +4,8 @@ module TableMappings.ProveedoresDb
   getOne,
   save,
   update,
-  delete
+  delete,
+  getByName
 ) where
 
 import Database.HDBC
@@ -35,6 +36,10 @@ fromType p =
   toSql $ activo p,
   toSql $ idProveedor p]
 
+getByNameCmd :: String -> Command
+getByNameCmd name =
+  Command "SELECT * FROM public.\"Proveedores\" where empresa like '%?%' and activo = ?  ORDER BY empresa" [toSql name, toSql True]
+
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =
   Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
@@ -54,6 +59,10 @@ updateCmd p =
 deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE public.\"Proveedores\" SET activo=? where id=?" [toSql False, toSql key]
+
+getByName :: String -> IO [Proveedor]
+getByName name = do
+  map toType <$> execSelQuery (getByNameCmd name)
 
 getAll :: Int -> Int -> IO (PageResult Proveedor)
 getAll offset pageSize = do
