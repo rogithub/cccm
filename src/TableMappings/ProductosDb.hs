@@ -38,7 +38,7 @@ fromType p =
 
 getByNameCmd :: String -> Command
 getByNameCmd name =
-  Command "SELECT * FROM public.\"Productos\" where name like '%?%' and activo = ? ORDER BY name" [toSql name, toSql True]
+  Command "SELECT * FROM public.\"Productos\" where nombre like ? and activo = ? ORDER BY nombre" [toSql name, toSql True]
 
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =

@@ -1,5 +1,6 @@
 module Controllers.Productos
 (
+  getBy,
   allGet,
   get,
   put,
@@ -16,6 +17,13 @@ import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   askRq, unBody, RqBody, rqBody)
 import Control.Monad.IO.Class     ( liftIO )
+
+getBy :: ServerPart Response
+getBy = do
+  method [GET, HEAD]
+  name <- look "name"
+  do liftIO $ S.putStrLn ("[GET] materiales/getBy?name=" ++ name)
+  okJSON (Db.getByName ("%"++name++"%"))
 
 allGet :: ServerPart Response
 allGet = do
