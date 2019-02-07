@@ -56,7 +56,7 @@ CREATE TABLE public.Documentos
 (
     id bigint NOT NULL DEFAULT nextval('Documentos_id_seq'::regclass),
     fileName character varying(300),
-    bytes varbinary,
+    bytes bytea,
     datechanged timestamp without time zone,
     CONSTRAINT Documentos_pkey PRIMARY KEY (id)
 )
