@@ -205,3 +205,158 @@ ALTER TABLE ONLY public.ComprasMateriales
     ADD CONSTRAINT ComprasMateriales_egresoId_fkey FOREIGN KEY (egresoId) REFERENCES public.Egresos(id);
 ALTER TABLE ONLY public.ComprasMateriales
     ADD CONSTRAINT ComprasMateriales_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(id);
+
+-- Table: public.DatosFacturacion
+
+-- DROP TABLE public.DatosFacturacion;
+CREATE SEQUENCE DatosFacturacion_id_seq START 1;
+CREATE TABLE public.DatosFacturacion
+(
+    id bigint NOT NULL DEFAULT nextval('DatosFacturacion_id_seq'::regclass),
+    nombre character varying(300),
+    calle character varying(300),
+    noExterior character varying(300),
+    noInterior character varying(300),
+    colonia character varying(300),
+    ciudad character varying(300),
+    estado character varying(100),
+    cp character varying(30),
+    rfc character varying(30),
+    email character varying(300),
+    CONSTRAINT DatosFacturacion_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.DatosFacturacion
+    OWNER to postgres;
+
+-- Table: public.Clientes
+
+-- DROP TABLE public.Clientes;
+CREATE SEQUENCE Clientes_id_seq START 1;
+CREATE TABLE public.Clientes
+(
+    id bigint NOT NULL DEFAULT nextval('Clientes_id_seq'::regclass),
+    facturacionId bigint,
+    contacto character varying(300),
+    empresa character varying(300),
+    telefono character varying(300),
+    email character varying(300),
+    domicilio character varying(300),
+    fechaCreado timestamp without time zone,
+    activo boolean,
+    CONSTRAINT Clientes_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.Clientes
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.Clientes
+    ADD CONSTRAINT Clientes_facturacionId_fkey FOREIGN KEY (facturacionId) REFERENCES public.DatosFacturacion(id);
+
+
+-- Table: public.ProveedoresCuentas
+
+-- DROP TABLE public.ProveedoresCuentas;
+CREATE SEQUENCE ProveedoresCuentas_id_seq START 1;
+CREATE TABLE public.ProveedoresCuentas
+(
+    id bigint NOT NULL DEFAULT nextval('ProveedoresCuentas_id_seq'::regclass),
+    proveedorId bigint,
+    cuentaId bigint,
+    CONSTRAINT ProveedoresCuentas_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ProveedoresCuentas
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.ProveedoresCuentas
+    ADD CONSTRAINT ProveedoresCuentas_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
+
+ALTER TABLE ONLY public.ProveedoresCuentas
+    ADD CONSTRAINT ProveedoresCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(id);
+
+
+-- Table: public.ClientesCuentas
+
+-- DROP TABLE public.ClientesCuentas;
+CREATE SEQUENCE ClientesCuentas_id_seq START 1;
+CREATE TABLE public.ClientesCuentas
+(
+    id bigint NOT NULL DEFAULT nextval('ClientesCuentas_id_seq'::regclass),
+    clienteId bigint,
+    cuentaId bigint,
+    CONSTRAINT ClientesCuentas_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ClientesCuentas
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.ClientesCuentas
+    ADD CONSTRAINT ClientesCuentas_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+
+ALTER TABLE ONLY public.ClientesCuentas
+    ADD CONSTRAINT ClientesCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(id);
+
+-- Table: public.Ingresos
+
+-- DROP TABLE public.Ingresos;
+CREATE SEQUENCE Ingresos_id_seq START 1;
+CREATE TABLE public.Ingresos
+(
+    id bigint NOT NULL DEFAULT nextval('Ingresos_id_seq'::regclass),
+    pagoId bigint,
+    clienteId bigint,
+    activo boolean,
+    CONSTRAINT Ingresos_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.Ingresos
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.Ingresos
+    ADD CONSTRAINT Ingresos_pagoId_fkey FOREIGN KEY (pagoId) REFERENCES public.Pagos(id);
+ALTER TABLE ONLY public.Ingresos
+    ADD CONSTRAINT Ingresos_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+
+-- Table: public.Cotizaciones
+
+-- DROP TABLE public.Cotizaciones;
+CREATE SEQUENCE Cotizaciones_id_seq START 1;
+CREATE TABLE public.Cotizaciones
+(
+    id bigint NOT NULL DEFAULT nextval('Cotizaciones_id_seq'::regclass),
+    clienteId bigint,
+    fecha timestamp without time zone,
+    activo boolean,
+    CONSTRAINT Cotizaciones_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.Cotizaciones
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.Cotizaciones
+    ADD CONSTRAINT Cotizaciones_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
