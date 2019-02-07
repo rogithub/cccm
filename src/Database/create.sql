@@ -360,3 +360,105 @@ ALTER TABLE public.Cotizaciones
 
 ALTER TABLE ONLY public.Cotizaciones
     ADD CONSTRAINT Cotizaciones_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+
+-- Table: public.Presupuestos
+
+-- DROP TABLE public.Presupuestos;
+CREATE SEQUENCE Presupuestos_id_seq START 1;
+CREATE TABLE public.Presupuestos
+(
+    id bigint NOT NULL DEFAULT nextval('Presupuestos_id_seq'::regclass),
+    cantidad numeric(18,8),
+    descripcion character varying(500),
+    gastosPorcien numeric(18,8),
+    gananciasPorcien numeric(18,8),
+    ivaPorcien numeric(18,8),
+    cotizacionId bigint,
+    CONSTRAINT Presupuestos_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.Presupuestos
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.Presupuestos
+    ADD CONSTRAINT Presupuestos_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(id);
+
+
+-- Table: public.ServiciosItems
+
+-- DROP TABLE public.ServiciosItems;
+CREATE SEQUENCE ServiciosItems_id_seq START 1;
+CREATE TABLE public.ServiciosItems
+(
+    id bigint NOT NULL DEFAULT nextval('ServiciosItems_id_seq'::regclass),
+    presupuestoId bigint,
+    cantidad numeric(18,8),
+    descripcion character varying(500),
+    precio numeric(18,8),
+    CONSTRAINT ServiciosItems_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ServiciosItems
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.ServiciosItems
+    ADD CONSTRAINT ServiciosItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(id);
+
+-- Table: public.MaterialesItems
+
+-- DROP TABLE public.MaterialesItems;
+CREATE SEQUENCE MaterialesItems_id_seq START 1;
+CREATE TABLE public.MaterialesItems
+(
+    id bigint NOT NULL DEFAULT nextval('MaterialesItems_id_seq'::regclass),
+    presupuestoId bigint,
+    materialId bigint,
+    cantidad numeric(18,8),
+    precio numeric(18,8),
+    CONSTRAINT MaterialesItems_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.MaterialesItems
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.MaterialesItems
+    ADD CONSTRAINT MaterialesItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(id);
+ALTER TABLE ONLY public.MaterialesItems
+    ADD CONSTRAINT MaterialesItems_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(id);
+
+
+-- Table: public.AbonosCotizaciones
+
+-- DROP TABLE public.AbonosCotizaciones;
+CREATE SEQUENCE AbonosCotizaciones_id_seq START 1;
+CREATE TABLE public.AbonosCotizaciones
+(
+    id bigint NOT NULL DEFAULT nextval('AbonosCotizaciones_id_seq'::regclass),
+    cotizacionId bigint,
+    ingresoId bigint,
+    CONSTRAINT AbonosCotizaciones_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.AbonosCotizaciones
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.AbonosCotizaciones
+    ADD CONSTRAINT AbonosCotizaciones_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(id);
+ALTER TABLE ONLY public.AbonosCotizaciones
+    ADD CONSTRAINT AbonosCotizaciones_ingresoId_fkey FOREIGN KEY (ingresoId) REFERENCES public.Ingresos(id);
