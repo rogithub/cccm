@@ -38,27 +38,27 @@ fromType p =
 
 getByNameCmd :: String -> Command
 getByNameCmd name =
-  Command "SELECT * FROM public.\"Proveedores\" where empresa like ? and activo = ?  ORDER BY empresa" [toSql name, toSql True]
+  Command "SELECT * FROM proveedores where empresa like ? and activo = ?  ORDER BY empresa" [toSql name, toSql True]
 
 selCmd :: Int -> Int -> Command
 selCmd offset pageSize =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM public.\"Proveedores\" where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM public.\"Proveedores\" where id = ?" [toSql key]
+  Command "SELECT * FROM proveedores where id = ?" [toSql key]
 
 savCmd :: Proveedor -> Command
 savCmd p =
-  Command "INSERT INTO public.\"Proveedores\" (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
+  Command "INSERT INTO proveedores (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
 
 updateCmd :: Proveedor -> Command
 updateCmd p =
-  Command "UPDATE public.\"Proveedores\" SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where id=?" (fromType p)
+  Command "UPDATE proveedores SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where id=?" (fromType p)
 
 deleteCmd :: Int -> Command
 deleteCmd key =
-  Command "UPDATE public.\"Proveedores\" SET activo=? where id=?" [toSql False, toSql key]
+  Command "UPDATE proveedores SET activo=? where id=?" [toSql False, toSql key]
 
 getByName :: String -> IO [Proveedor]
 getByName name = do

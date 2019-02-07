@@ -1,11 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Producto
-( Producto(..) ) where
+module Tipos.Material
+( Material(..) ) where
 
 import Data.Aeson
 import GHC.Generics
 
-data Producto = Producto { idProducto :: Int
+data Material = Material { idMaterial :: Int
                , nombre :: String
                , color :: String
                , unidad :: String
@@ -14,7 +14,7 @@ data Producto = Producto { idProducto :: Int
                , comentarios :: Maybe String
                , activo :: Bool
                } deriving (Generic, Show)
-instance ToJSON Producto where
+instance ToJSON Material where
  toEncoding = genericToEncoding defaultOptions
 
-instance FromJSON Producto
+instance FromJSON Material
