@@ -122,11 +122,9 @@ CREATE TABLE public.Pagos
 (
     id bigint NOT NULL DEFAULT nextval('Pagos_id_seq'::regclass),
     motivo character varying(300),
-    total numeric(18,8),
+    monto numeric(18,8),
     fechaCaptura timestamp without time zone,
     fechaAplicacion timestamp without time zone,
-    docIdFacturaPdf bigint,
-    docIdFacturaXml bigint,
     docIdNotaRemision bigint,
     docIdTransfeBanco bigint,
     cuentaOrigenId bigint,
@@ -142,10 +140,6 @@ TABLESPACE pg_default;
 ALTER TABLE public.Pagos
     OWNER to postgres;
 
-ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(id);
-ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(id);
 ALTER TABLE ONLY public.Pagos
     ADD CONSTRAINT Pagos_IdNotaRemision_fkey FOREIGN KEY (docIdNotaRemision) REFERENCES public.Documentos(id);
 ALTER TABLE ONLY public.Pagos
@@ -180,6 +174,36 @@ ALTER TABLE ONLY public.Egresos
 ALTER TABLE ONLY public.Egresos
     ADD CONSTRAINT Egresos_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
 
+-- Table: public.Compras
+
+-- DROP TABLE public.Compras;
+CREATE SEQUENCE Compras_id_seq START 1;
+CREATE TABLE public.Compras
+(
+    id bigint NOT NULL DEFAULT nextval('Compras_id_seq'::regclass),
+    proveedorId bigint,
+    fecha timestamp without time zone,
+    docIdFacturaPdf bigint,
+    docIdFacturaXml bigint,
+    activo boolean,
+    CONSTRAINT Compras_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.Compras
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.Compras
+    ADD CONSTRAINT Compras_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
+ALTER TABLE ONLY public.Compras
+    ADD CONSTRAINT Compras_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(id);
+ALTER TABLE ONLY public.Compras
+    ADD CONSTRAINT Compras_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(id);
+
+
 -- Table: public.ComprasMateriales
 
 -- DROP TABLE public.ComprasMateriales;
@@ -187,10 +211,10 @@ CREATE SEQUENCE ComprasMateriales_id_seq START 1;
 CREATE TABLE public.ComprasMateriales
 (
     id bigint NOT NULL DEFAULT nextval('ComprasMateriales_id_seq'::regclass),
-    egresoId bigint,
+    compraId bigint,
     materialId bigint,
     cantidad numeric(18,8),
-    precioUnitario numeric(18,8),
+    precio numeric(18,8),
     CONSTRAINT ComprasMateriales_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -202,9 +226,33 @@ ALTER TABLE public.ComprasMateriales
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ComprasMateriales
-    ADD CONSTRAINT ComprasMateriales_egresoId_fkey FOREIGN KEY (egresoId) REFERENCES public.Egresos(id);
+    ADD CONSTRAINT ComprasMateriales_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(id);
 ALTER TABLE ONLY public.ComprasMateriales
     ADD CONSTRAINT ComprasMateriales_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(id);
+
+-- Table: public.ComprasServicios
+
+-- DROP TABLE public.ComprasServicios;
+CREATE SEQUENCE ComprasServicios_id_seq START 1;
+CREATE TABLE public.ComprasServicios
+(
+    id bigint NOT NULL DEFAULT nextval('ComprasServicios_id_seq'::regclass),
+    compraId bigint,
+    descripcion character varying(500),
+    cantidad numeric(18,8),
+    precio numeric(18,8),
+    CONSTRAINT ComprasServicios_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ComprasServicios
+    OWNER to postgres;
+
+ALTER TABLE ONLY public.ComprasServicios
+    ADD CONSTRAINT ComprasServicios_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(id);
 
 -- Table: public.DatosFacturacion
 
@@ -347,6 +395,8 @@ CREATE TABLE public.Cotizaciones
     id bigint NOT NULL DEFAULT nextval('Cotizaciones_id_seq'::regclass),
     clienteId bigint,
     fecha timestamp without time zone,
+    docIdFacturaPdf bigint,
+    docIdFacturaXml bigint,
     activo boolean,
     CONSTRAINT Cotizaciones_pkey PRIMARY KEY (id)
 )
@@ -360,6 +410,10 @@ ALTER TABLE public.Cotizaciones
 
 ALTER TABLE ONLY public.Cotizaciones
     ADD CONSTRAINT Cotizaciones_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+ALTER TABLE ONLY public.Cotizaciones
+    ADD CONSTRAINT Cotizaciones_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(id);
+ALTER TABLE ONLY public.Cotizaciones
+    ADD CONSTRAINT Cotizaciones_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(id);
 
 -- Table: public.Presupuestos
 
