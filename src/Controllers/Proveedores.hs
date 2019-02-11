@@ -8,7 +8,6 @@ module Controllers.Proveedores
   del
 ) where
 
-import System.IO as S
 import Data.Aeson
 import Controllers.Helper
 import Tipos.Proveedor
@@ -22,7 +21,7 @@ getBy :: ServerPart Response
 getBy = do
   method [GET, HEAD]
   name <- look "name"
-  do liftIO $ S.putStrLn ("[GET] proveedores/getBy?name=" ++ name)
+  logReq ("[GET] proveedores/getBy?name=" ++ name)
   okJSON (Db.getByName ("%"++name++"%"))
 
 allGet :: ServerPart Response
@@ -30,13 +29,13 @@ allGet = do
   method [GET, HEAD]
   offset <- look "offset"
   pageSize <- look "pageSize"
-  do liftIO $ S.putStrLn ("[GET] proveedores?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize)
+  logReq ("[GET] proveedores?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize)
   okJSON (Db.getAll (read offset::Int) (read pageSize::Int))
 
 get :: String -> ServerPart Response
 get key = do
   method [GET, HEAD]
-  do liftIO $ S.putStrLn ("[GET] proveedores/" ++ key)
+  logReq ("[GET] proveedores/" ++ key)
   let intKey = read key :: Int
   okJSON (Db.getOne intKey)
 
@@ -48,7 +47,7 @@ put key = do
   let proveedor = case body of
         Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
         Nothing     -> Nothing
-  do liftIO $ S.putStrLn ("[PUT] proveedores/" ++ (show proveedor))
+  logReq ("[PUT] proveedores/" ++ (show proveedor))
   okJSON (Db.update proveedor)
 
 post :: ServerPart Response
@@ -59,12 +58,12 @@ post = do
   let proveedor = case body of
         Just rqbody -> decode (unBody rqbody) :: Maybe Proveedor
         Nothing     -> Nothing
-  do liftIO $ S.putStrLn ("[POST] proveedores/" ++ (show proveedor))
+  logReq ("[POST] proveedores/" ++ (show proveedor))
   okJSON (Db.save proveedor)
 
 del :: String -> ServerPart Response
 del key = do
   method [OPTIONS, DELETE]
-  do liftIO $ S.putStrLn ("[DELETE] proveedores/" ++ key)
+  logReq ("[DELETE] proveedores/" ++ key)
   let intKey = read key :: Int
   okJSON (Db.delete intKey)

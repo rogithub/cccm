@@ -1,10 +1,13 @@
 module Controllers.Helper
 (
   peekRequestBody,
-  okJSON
+  okJSON,
+  logReq
 ) where
 
+import Data.Time.Clock
 import Data.Aeson
+import System.IO as S
 import Control.Concurrent.MVar (tryReadMVar)
 import Data.ByteString.Char8 as C
 import Data.ByteString.Lazy as L
@@ -12,6 +15,10 @@ import Control.Monad.IO.Class     ( liftIO, MonadIO )
 import Happstack.Server (Response, ServerPart, Request, RqBody, rqBody,
                         ok, toResponseBS, setHeaderM)
 
+logReq :: String -> ServerPart ()
+logReq url = do
+  now <- liftIO $ getCurrentTime
+  liftIO $ S.putStrLn ("["++ show now ++"]" ++ url)
 
 peekRequestBody :: (MonadIO m) => Request -> m (Maybe RqBody)
 peekRequestBody rq = liftIO $ tryReadMVar (rqBody rq)
