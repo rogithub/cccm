@@ -42,7 +42,9 @@ getByNameCmd name =
 
 selCmd :: Int -> Int -> String -> Command
 selCmd offset pageSize name =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales WHERE activo=? AND nombre ~* ? ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales WHERE activo=? AND \
+  \ concat_ws(' ', nombre, color, unidad, marca, modelo) ~* ? \
+  \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
