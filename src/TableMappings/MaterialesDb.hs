@@ -38,13 +38,16 @@ fromType p =
 
 getByNameCmd :: String -> Command
 getByNameCmd name =
-  Command "SELECT * FROM materiales where nombre like ? and activo = ? ORDER BY nombre" [toSql name, toSql True]
+  Command "SELECT * FROM materiales where nombre like ? and activo = ? \
+  \ORDER BY nombre" [toSql name, toSql True]
 
 selCmd :: Int -> Int -> String -> Command
 selCmd offset pageSize name =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales WHERE activo=? AND \
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales \
+  \ WHERE activo=? AND \
   \ concat_ws(' ', nombre, color, unidad, marca, modelo) ~* ? \
-  \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
+  \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY"
+  [toSql True, toSql name, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -52,11 +55,15 @@ selOneCmd key =
 
 savCmd :: Material -> Command
 savCmd p =
-  Command "INSERT INTO materiales (nombre, color, unidad, marca, modelo, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
+  Command "INSERT INTO materiales \
+  \ (nombre, color, unidad, marca, modelo, comentarios, activo)\
+  \ values (?,?,?,?,?,?,?)" (init $ fromType p)
 
 updateCmd :: Material -> Command
 updateCmd p =
-  Command "UPDATE materiales SET nombre=?, color=?, unidad=?, marca=?, modelo=?, comentarios=?, activo=? where id=?" (fromType p)
+  Command "UPDATE materiales SET \
+  \ nombre=?, color=?, unidad=?, marca=?, modelo=?, comentarios=?, activo=?\
+  \ where id=?" (fromType p)
 
 deleteCmd :: Int -> Command
 deleteCmd key =
