@@ -6,6 +6,7 @@ module Controllers.Helper
 ) where
 
 import Data.Time.Clock
+import Data.Time.LocalTime
 import Data.Aeson
 import System.IO as S
 import Control.Concurrent.MVar (tryReadMVar)
@@ -15,9 +16,13 @@ import Control.Monad.IO.Class     ( liftIO, MonadIO )
 import Happstack.Server (Response, ServerPart, Request, RqBody, rqBody,
                         ok, toResponseBS, setHeaderM)
 
+now :: IO LocalTime
+now = fmap zonedTimeToLocalTime getZonedTime
+
+
 logReq :: String -> ServerPart ()
 logReq url = do
-  now <- liftIO $ getCurrentTime
+  now <- liftIO $ now
   liftIO $ S.putStrLn ("["++ show now ++"]" ++ url)
 
 peekRequestBody :: (MonadIO m) => Request -> m (Maybe RqBody)
