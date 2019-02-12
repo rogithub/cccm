@@ -5,7 +5,6 @@ module Controllers.Helper
   logReq
 ) where
 
-import Data.Time.Clock
 import Data.Time.LocalTime
 import Data.Aeson
 import System.IO as S
