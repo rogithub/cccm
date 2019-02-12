@@ -29,8 +29,9 @@ allGet = do
   method [GET, HEAD]
   offset <- look "offset"
   pageSize <- look "pageSize"
-  logReq ("[GET] proveedores?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize)
-  okJSON (Db.getAll (read offset::Int) (read pageSize::Int))
+  name <- look "name"
+  logReq ("[GET] proveedores?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize ++ "&name=" ++ name)
+  okJSON (Db.getAll (read offset::Int) (read pageSize::Int) ("%"++name++"%"))
 
 get :: String -> ServerPart Response
 get key = do

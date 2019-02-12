@@ -40,9 +40,9 @@ getByNameCmd :: String -> Command
 getByNameCmd name =
   Command "SELECT * FROM proveedores where empresa like ? and activo = ?  ORDER BY empresa" [toSql name, toSql True]
 
-selCmd :: Int -> Int -> Command
-selCmd offset pageSize =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores where activo = ? ORDER BY id OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql offset, toSql pageSize]
+selCmd :: Int -> Int -> String -> Command
+selCmd offset pageSize name =
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores WHERE activo = ? and empresa LIKE ? ORDER BY empresa OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -64,9 +64,9 @@ getByName :: String -> IO [Proveedor]
 getByName name = do
   map toType <$> execSelQuery (getByNameCmd name)
 
-getAll :: Int -> Int -> IO (PageResult Proveedor)
-getAll offset pageSize = do
-  rows <- execSelQuery (selCmd offset pageSize)
+getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
+getAll offset pageSize name = do
+  rows <- execSelQuery (selCmd offset pageSize name)
   return (PageResult (map toType rows) (getFstIntOrZero rows 8))
 
 getProveedor :: [[SqlValue]] -> Maybe Proveedor
