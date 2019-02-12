@@ -21,8 +21,8 @@ getBy :: ServerPart Response
 getBy = do
   method [GET, HEAD]
   name <- look "name"
-  logReq ("[GET] materiales/getBy?name=" ++ ("%"++name++"%"))
-  okJSON (Db.getByName ("%"++name++"%"))
+  logReq ("[GET] materiales/getBy?name=" ++ name)
+  okJSON (Db.getByName name)
 
 allGet :: ServerPart Response
 allGet = do
@@ -30,8 +30,8 @@ allGet = do
   offset <- look "offset"
   pageSize <- look "pageSize"
   name <- look "name"
-  logReq ("[GET] materiales?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize ++ "&name=" ++ ("%"++name++"%"))
-  okJSON (Db.getAll (read offset::Int) (read pageSize::Int) ("%"++name++"%"))
+  logReq ("[GET] materiales?" ++ "offset=" ++ offset ++ "&pageSize=" ++ pageSize ++ "&name=" ++ name)
+  okJSON (Db.getAll (read offset::Int) (read pageSize::Int) name)
 
 get :: String -> ServerPart Response
 get key = do

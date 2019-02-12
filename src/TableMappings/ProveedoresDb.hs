@@ -42,7 +42,7 @@ getByNameCmd name =
 
 selCmd :: Int -> Int -> String -> Command
 selCmd offset pageSize name =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores WHERE activo = ? and empresa LIKE ? ORDER BY empresa OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
+  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores WHERE activo = ? and empresa ~* ? ORDER BY empresa OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
