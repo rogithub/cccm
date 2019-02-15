@@ -1,4 +1,4 @@
-module TableMappings.BancosDb
+module TableMappings.BancosProveedorDb
 (
   getAll,
   getOne,
@@ -33,13 +33,13 @@ fromType p =
   toSql $ activo p,
   toSql $ idCuenta p]
 
-selCmd :: Int -> Int -> String -> Command
-selCmd offset pageSize name =
+selCmd :: Int -> Command
+selCmd proveedorId =
   Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales \
   \ WHERE activo=? AND \
   \ concat_ws(' ', nombre, color, unidad, marca, modelo) ~* ? \
   \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY"
-  [toSql True, toSql name, toSql offset, toSql pageSize]
+  [toSql True, toSql proveedorId]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -61,18 +61,18 @@ deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE materiales SET activo=? where id=?" [toSql False, toSql key]
 
-getAll :: Int -> Int -> String -> IO (PageResult Cuenta)
-getAll offset pageSize name = do
-  rows <- execSelQuery (selCmd offset pageSize name)
+getAll :: Int -> IO (PageResult Cuenta)
+getAll proveedorId = do
+  rows <- execSelQuery (selCmd proveedorId)
   return (PageResult (map toType rows) (getFstIntOrZero rows 8))
 
-getMaterial :: [[SqlValue]] -> Maybe Cuenta
-getMaterial rows =
+getCuenta :: [[SqlValue]] -> Maybe Cuenta
+getCuenta rows =
   case rows of [x] -> Just (toType x)
                _  -> Nothing
 
 getOne :: Int -> IO (Maybe Cuenta)
-getOne key = getMaterial <$> execSelQuery (selOneCmd key)
+getOne key = getCuenta <$> execSelQuery (selOneCmd key)
 
 save :: (Maybe Cuenta) -> IO Integer
 save Nothing  = return 0
