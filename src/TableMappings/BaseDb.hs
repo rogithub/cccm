@@ -13,7 +13,7 @@ import DataAccess.ValueHelpers
 getPageResult :: Command -> ([SqlValue] -> a) -> IO (PageResult a)
 getPageResult cmd toType = do
   rows <- execSelQuery cmd
-  return (PageResult (map toType rows) (getFstIntOrZero rows (length rows)))
+  return (PageResult (map toType rows) (getTotalRows rows))
 
 fstRowToType :: [[SqlValue]] -> ([SqlValue] -> a) -> Maybe a
 fstRowToType rows toType =

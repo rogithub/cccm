@@ -2,7 +2,7 @@ module DataAccess.ValueHelpers
 (
   getIntOrDefault,
   getIntOrZero,
-  getFstIntOrZero
+  getTotalRows
 ) where
 
 import Database.HDBC
@@ -15,6 +15,6 @@ getIntOrDefault _ row i = fromSql (row!!i) :: Int
 getIntOrZero :: [SqlValue] -> Int -> Int
 getIntOrZero row i = getIntOrDefault 0 row i
 
-getFstIntOrZero :: [[SqlValue]] -> Int -> Int
-getFstIntOrZero [] _ = 0
-getFstIntOrZero (row:_) i = getIntOrZero row i
+getTotalRows :: [[SqlValue]] -> Int
+getTotalRows [] = 0
+getTotalRows (r:rs) = getIntOrZero r ((length r) - 1)
