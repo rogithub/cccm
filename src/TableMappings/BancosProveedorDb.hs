@@ -21,7 +21,7 @@ toType row =
     nocuenta = fromSql (row!!3)::Maybe String,
     beneficiario = fromSql (row!!4)::String,
     emailNotificacion = fromSql (row!!5)::Maybe String,
-    activo = fromSql (row!!7)::Bool }
+    activo = fromSql (row!!8)::Bool }
 
 fromType :: Cuenta -> [SqlValue]
 fromType p =
@@ -35,31 +35,30 @@ fromType p =
 
 selCmd :: Int -> Command
 selCmd proveedorId =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales \
-  \ WHERE activo=? AND \
-  \ concat_ws(' ', nombre, color, unidad, marca, modelo) ~* ? \
-  \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY"
-  [toSql True, toSql proveedorId]
+  Command "SELECT c.* FROM cuentas c JOIN proveedorescuentas p \
+  \ ON c.Id = p.cuentaId \
+  \ where efectivo = false and \
+  \ activo = ? and p.proveedorId = ?;" [toSql True, toSql proveedorId]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM materiales where id = ?" [toSql key]
+  Command "SELECT * FROM cuentas where id = ?" [toSql key]
 
 savCmd :: Cuenta -> Command
 savCmd p =
-  Command "INSERT INTO materiales \
-  \ (nombre, color, unidad, marca, modelo, comentarios, activo)\
-  \ values (?,?,?,?,?,?,?)" (init $ fromType p)
+  Command "INSERT INTO cuentas \
+  \ (banco, clabe, nocuenta, beneficiario, emailnotificacion, nombre, efectivo, activo) \
+  \ values (?,?,?,?,?,'',false,?)" (init $ fromType p)
 
 updateCmd :: Cuenta -> Command
 updateCmd p =
-  Command "UPDATE materiales SET \
-  \ nombre=?, color=?, unidad=?, marca=?, modelo=?, comentarios=?, activo=?\
+  Command "UPDATE cuentas SET \
+  \ banco=?, clabe=?, nocuenta=?, beneficiario=?, emailnotificacion=?, activo=? \
   \ where id=?" (fromType p)
 
 deleteCmd :: Int -> Command
 deleteCmd key =
-  Command "UPDATE materiales SET activo=? where id=?" [toSql False, toSql key]
+  Command "UPDATE cuentas SET activo=? where id=?" [toSql False, toSql key]
 
 getAll :: Int -> IO (PageResult Cuenta)
 getAll proveedorId = do
