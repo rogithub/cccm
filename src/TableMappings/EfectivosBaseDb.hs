@@ -1,4 +1,4 @@
-module TableMappings.EfectivoBaseDb
+module TableMappings.EfectivosBaseDb
 (
   getOne,
   save,
