@@ -11,8 +11,8 @@ import Database.HDBC
 import DataAccess.Commands
 import Tipos.Banco
 import Tipos.PageResult
-import DataAccess.ValueHelpers
-import TableMappings.CuentasDb as Db
+import TableMappings.BaseDb as BaseDb
+import TableMappings.CuentasDb as CuentasDb
 
 selCmd :: Int -> Command
 selCmd proveedorId =
@@ -21,16 +21,16 @@ selCmd proveedorId =
   \ where efectivo = false and \
   \ activo = ? and p.proveedorId = ?;" [toSql True, toSql proveedorId]
 
-getAll :: Int -> IO (PageResult Banco)
+getAll :: Int -> IO [Banco]
 getAll proveedorId = do
-  rows <- execSelQuery (selCmd proveedorId)
-  return (PageResult (map Db.bancoToType rows) (getFstIntOrZero rows 8))
+  let cmd = selCmd proveedorId
+  BaseDb.rowsToType cmd toType  
 
 getOne :: Int -> IO (Maybe Banco)
-getOne = Db.getOneBanco
+getOne = CuentasDb.getOneBanco
 
 save :: (Maybe Banco) -> IO Integer
-save = Db.saveBanco
+save = CuentasDb.saveBanco
 
 update :: (Maybe Banco) -> IO Integer
-update = Db.updateBanco
+update = CuentasDb.updateBanco

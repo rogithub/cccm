@@ -12,7 +12,7 @@ import Database.HDBC
 import DataAccess.Commands
 import Tipos.Material
 import Tipos.PageResult
-import DataAccess.ValueHelpers
+import TableMappings.BaseDb as BaseDb
 
 toType :: [SqlValue] -> Material
 toType row =
@@ -71,20 +71,18 @@ deleteCmd key =
 
 getByName :: String -> IO [Material]
 getByName name = do
-  map toType <$> execSelQuery (getByNameCmd name)
+  let cmd = getByNameCmd name
+  BaseDb.rowsToType cmd toType
 
 getAll :: Int -> Int -> String -> IO (PageResult Material)
 getAll offset pageSize name = do
-  rows <- execSelQuery (selCmd offset pageSize name)
-  return (PageResult (map toType rows) (getFstIntOrZero rows 8))
-
-getMaterial :: [[SqlValue]] -> Maybe Material
-getMaterial rows =
-  case rows of [x] -> Just (toType x)
-               _  -> Nothing
+  let cmd = selCmd offset pageSize name
+  BaseDb.getPageResult cmd toType
 
 getOne :: Int -> IO (Maybe Material)
-getOne key = getMaterial <$> execSelQuery (selOneCmd key)
+getOne key = do
+  let cmd = selOneCmd key
+  BaseDb.rowToType cmd toType
 
 save :: (Maybe Material) -> IO Integer
 save Nothing  = return 0

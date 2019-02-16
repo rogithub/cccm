@@ -12,7 +12,7 @@ import Database.HDBC
 import DataAccess.Commands
 import Tipos.Banco
 import Tipos.PageResult
-import DataAccess.ValueHelpers
+import TableMappings.BaseDb as BaseDb
 
 bancoToType :: [SqlValue] -> Banco
 bancoToType row =
@@ -55,13 +55,10 @@ deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE cuentas SET activo=? where id=?" [toSql False, toSql key]
 
-getBanco :: [[SqlValue]] -> Maybe Banco
-getBanco rows =
-  case rows of [x] -> Just (bancoToType x)
-               _  -> Nothing
-
 getOneBanco :: Int -> IO (Maybe Banco)
-getOneBanco key = getBanco <$> execSelQuery (selOneCmd key)
+getOneBanco key = do
+  let cmd = selOneCmd key
+  BaseDb.rowToType cmd bancoToType
 
 saveBanco :: (Maybe Banco) -> IO Integer
 saveBanco Nothing  = return 0
