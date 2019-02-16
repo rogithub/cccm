@@ -1,26 +1,16 @@
 {-# LANGUAGE DeriveGeneric #-}
 module Tipos.Cuenta
-( Cuenta(..) ) where
+(
+  Cuenta(..)
+) where
 
 import Data.Aeson
 import GHC.Generics
+import Tipos.Banco
+import Tipos.Efectivo
 
-data Cuenta = Banco { idCuenta :: Int
-               , banco :: String
-               , clabe :: Maybe String
-               , nocuenta :: Maybe String
-               , beneficiario :: String
-               , emailNotificacion :: Maybe String
-               , activo :: Bool
-               } |
-               Efectivo { idCuenta :: Int
-                              , nombre :: String
-                              , beneficiario :: String
-                              , emailNotificacion :: Maybe String
-                              , activo :: Bool
-                              }
-                deriving (Generic, Show)
+
+data Cuenta = Banco | Efectivo  deriving (Generic, Show)
 instance ToJSON Cuenta where
  toEncoding = genericToEncoding defaultOptions
-
 instance FromJSON Cuenta
