@@ -1,11 +1,11 @@
-module TableMappings.CuentasDb
+module TableMappings.BancosBaseDb
 (
-  getOneBanco,
-  saveBanco,
-  updateBanco,
+  getOne,
+  save,
+  update,
   delete,
-  bancoToType,
-  bancoFromType
+  toType,
+  fromType
 ) where
 
 import Database.HDBC
@@ -14,8 +14,8 @@ import Tipos.Banco
 import Tipos.PageResult
 import TableMappings.BaseDb as BaseDb
 
-bancoToType :: [SqlValue] -> Banco
-bancoToType row =
+toType :: [SqlValue] -> Banco
+toType row =
   Banco { idCuenta = fromSql (row!!0)::Int,
     banco = fromSql (row!!1)::String,
     clabe = fromSql (row!!2)::Maybe String,
@@ -24,8 +24,8 @@ bancoToType row =
     emailNotificacion = fromSql (row!!5)::Maybe String,
     activo = fromSql (row!!8)::Bool }
 
-bancoFromType :: Banco -> [SqlValue]
-bancoFromType p =
+fromType :: Banco -> [SqlValue]
+fromType p =
   [toSql $ banco p,
   toSql $ clabe p,
   toSql $ nocuenta p,
@@ -39,34 +39,34 @@ selOneCmd :: Int -> Command
 selOneCmd key =
   Command "SELECT * FROM cuentas where id = ?" [toSql key]
 
-savBancoCmd :: Banco -> Command
-savBancoCmd b =
+savCmd :: Banco -> Command
+savCmd b =
   Command "INSERT INTO cuentas \
   \ (banco, clabe, nocuenta, beneficiario, emailnotificacion, nombre, efectivo, activo) \
-  \ values (?,?,?,?,?,'',false,?)" (init $ bancoFromType b)
+  \ values (?,?,?,?,?,'',false,?)" (init $ fromType b)
 
-updateBancoCmd :: Banco -> Command
-updateBancoCmd b =
+updateCmd :: Banco -> Command
+updateCmd b =
   Command "UPDATE cuentas SET \
   \ banco=?, clabe=?, nocuenta=?, beneficiario=?, emailnotificacion=?, activo=? \
-  \ where id=?" (bancoFromType b)
+  \ where id=?" (fromType b)
 
 deleteCmd :: Int -> Command
 deleteCmd key =
   Command "UPDATE cuentas SET activo=? where id=?" [toSql False, toSql key]
 
-getOneBanco :: Int -> IO (Maybe Banco)
-getOneBanco key = do
+getOne :: Int -> IO (Maybe Banco)
+getOne key = do
   let cmd = selOneCmd key
-  BaseDb.rowToType cmd bancoToType
+  BaseDb.rowToType cmd toType
 
-saveBanco :: (Maybe Banco) -> IO Integer
-saveBanco Nothing  = return 0
-saveBanco (Just b) = execNonSelQuery (savBancoCmd b)
+save :: (Maybe Banco) -> IO Integer
+save Nothing  = return 0
+save (Just b) = execNonSelQuery (savCmd b)
 
-updateBanco :: (Maybe Banco) -> IO Integer
-updateBanco Nothing  = return 0
-updateBanco (Just b) = execNonSelQuery (updateBancoCmd b)
+update :: (Maybe Banco) -> IO Integer
+update Nothing  = return 0
+update (Just b) = execNonSelQuery (updateCmd b)
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)
