@@ -10,9 +10,9 @@ module TableMappings.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
-import DataAccess.ValueHelpers
 import Tipos.Proveedor
 import Tipos.PageResult
+import TableMappings.BaseDb as BaseDb
 
 toType :: [SqlValue] -> Proveedor
 toType row =
@@ -62,20 +62,18 @@ deleteCmd key =
 
 getByName :: String -> IO [Proveedor]
 getByName name = do
-  map toType <$> execSelQuery (getByNameCmd name)
+  let cmd = getByNameCmd name
+  BaseDb.rowsToType cmd toType
 
 getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
 getAll offset pageSize name = do
-  rows <- execSelQuery (selCmd offset pageSize name)
-  return (PageResult (map toType rows) (getFstIntOrZero rows 8))
-
-getProveedor :: [[SqlValue]] -> Maybe Proveedor
-getProveedor rows =
-  case rows of [x] -> Just (toType x)
-               _  -> Nothing
+  let cmd = selCmd offset pageSize name
+  BaseDb.getPageResult cmd toType
 
 getOne :: Int -> IO (Maybe Proveedor)
-getOne key = getProveedor <$> execSelQuery (selOneCmd key)
+getOne key = do
+  let cmd = selOneCmd key
+  BaseDb.rowToType cmd toType
 
 save :: (Maybe Proveedor) -> IO Integer
 save Nothing  = return 0
