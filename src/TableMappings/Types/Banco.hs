@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Banco
+module TableMappings.Types.Banco
 (
   Banco(..)
 ) where

@@ -10,8 +10,8 @@ module TableMappings.BancosBaseDb
 
 import Database.HDBC
 import DataAccess.Commands
-import Tipos.Banco
-import Tipos.PageResult
+import TableMappings.Types.Banco
+import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 
 toType :: [SqlValue] -> Banco

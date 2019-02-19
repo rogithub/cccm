@@ -10,8 +10,8 @@ module TableMappings.MaterialesDb
 
 import Database.HDBC
 import DataAccess.Commands
-import Tipos.Material
-import Tipos.PageResult
+import TableMappings.Types.Material
+import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 
 toType :: [SqlValue] -> Material

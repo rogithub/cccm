@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.PageResult
+module TableMappings.Types.PageResult
 ( PageResult(..) ) where
 
 import Data.Aeson

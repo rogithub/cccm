@@ -1,11 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Compra
+module TableMappings.Types.Compra
 ( Compra(..) ) where
 
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
-import Tipos.CompraRow
+import TableMappings.Types.CompraRow
 
 data Compra = Compra { idCompra :: Int
                , proveedorId :: Int

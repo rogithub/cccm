@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.CompraServicio
+module TableMappings.Types.CompraServicio
 ( CompraServicio(..) ) where
 
 import Data.Aeson

@@ -9,8 +9,8 @@ module TableMappings.EfectivosProveedorDb
 
 import Database.HDBC
 import DataAccess.Commands
-import Tipos.Efectivo
-import Tipos.PageResult
+import TableMappings.Types.Efectivo
+import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 import TableMappings.EfectivosBaseDb as EfectivosBaseDb
 

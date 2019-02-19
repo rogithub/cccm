@@ -10,7 +10,7 @@ module Controllers.Materiales
 
 import Data.Aeson
 import Controllers.Helper
-import Tipos.Material
+import TableMappings.Types.Material
 import TableMappings.MaterialesDb as Db
 import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),

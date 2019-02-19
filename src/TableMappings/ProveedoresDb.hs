@@ -10,8 +10,8 @@ module TableMappings.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
-import Tipos.Proveedor
-import Tipos.PageResult
+import TableMappings.Types.Proveedor
+import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 
 toType :: [SqlValue] -> Proveedor

@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.CompraRow
+module TableMappings.Types.CompraRow
 (
   CompraRow(..)
 ) where
 
 import Data.Aeson
 import GHC.Generics
-import Tipos.CompraServicio
-import Tipos.CompraMaterial
+import TableMappings.Types.CompraServicio
+import TableMappings.Types.CompraMaterial
 
 
 data CompraRow = CompraMaterial | CompraServicio  deriving (Generic, Show)

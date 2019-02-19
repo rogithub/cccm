@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Material
+module TableMappings.Types.Material
 ( Material(..) ) where
 
 import Data.Aeson

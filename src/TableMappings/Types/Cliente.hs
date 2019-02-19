@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Cliente
+module TableMappings.Types.Cliente
 ( Cliente(..) ) where
 
 import Data.Aeson

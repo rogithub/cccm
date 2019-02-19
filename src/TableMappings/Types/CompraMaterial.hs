@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.CompraMaterial
+module TableMappings.Types.CompraMaterial
 ( CompraMaterial(..) ) where
 
 import Data.Aeson

@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Cuenta
+module TableMappings.Types.Cuenta
 (
   Cuenta(..)
 ) where
 
 import Data.Aeson
 import GHC.Generics
-import Tipos.Banco
-import Tipos.Efectivo
+import TableMappings.Types.Banco
+import TableMappings.Types.Efectivo
 
 
 data Cuenta = Banco | Efectivo  deriving (Generic, Show)

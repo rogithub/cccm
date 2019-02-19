@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Efectivo
+module TableMappings.Types.Efectivo
 (
   Efectivo(..)
 ) where

@@ -7,7 +7,7 @@ module TableMappings.BaseDb
 
 import Database.HDBC
 import DataAccess.Commands
-import Tipos.PageResult
+import TableMappings.Types.PageResult
 import DataAccess.ValueHelpers
 
 getPageResult :: Command -> ([SqlValue] -> a) -> IO (PageResult a)

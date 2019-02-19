@@ -10,7 +10,7 @@ module Controllers.Proveedores
 
 import Data.Aeson
 import Controllers.Helper
-import Tipos.Proveedor
+import TableMappings.Types.Proveedor
 import TableMappings.ProveedoresDb as Db
 import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),

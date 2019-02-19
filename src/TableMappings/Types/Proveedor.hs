@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Tipos.Proveedor
+module TableMappings.Types.Proveedor
 (Proveedor(..)) where
 
 import Data.Aeson
