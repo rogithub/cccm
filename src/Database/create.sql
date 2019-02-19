@@ -185,6 +185,7 @@ CREATE TABLE public.Compras
     fecha timestamp without time zone,
     docIdFacturaPdf bigint,
     docIdFacturaXml bigint,
+    ivaPorcien numeric(18,8),
     activo boolean,
     CONSTRAINT Compras_pkey PRIMARY KEY (id)
 )
