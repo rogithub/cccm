@@ -19,6 +19,7 @@ post = do
   method [OPTIONS, POST]
   req  <- askRq
   body <- liftIO $ peekRequestBody req
+  logReq ("BODY: " ++ (show body))
   let compra = case body of
         Just rqbody -> decode (unBody rqbody) :: Maybe Compra
         Nothing     -> Nothing

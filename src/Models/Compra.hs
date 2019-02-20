@@ -7,12 +7,13 @@ import GHC.Generics
 import Data.Time.Calendar
 import Models.CompraRow
 
-data Compra = Compra { idCompra :: Int
+
+data Compra = Compra { activo :: Bool
+               , idCompra :: Int
                , proveedorId :: Int
-               , fecha :: Day
-               , rows :: [CompraRow]
+               , fecha ::  DotNetTime
                , iva :: Double
-               , activo :: Bool
+               , rows :: [CompraRow]
                } deriving (Generic, Show)
 instance ToJSON Compra where
  toEncoding = genericToEncoding defaultOptions
