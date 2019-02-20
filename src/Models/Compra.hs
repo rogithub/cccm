@@ -5,15 +5,17 @@ module Models.Compra
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
-import Models.CompraRow
-
+import Models.CompraMaterial
+import Models.CompraServicio
 
 data Compra = Compra { activo :: Bool
                , idCompra :: Int
                , proveedorId :: Int
-               , fecha ::  DotNetTime
+               , fecha :: DotNetTime
                , iva :: Double
-               , rows :: [CompraRow]
+               , materialesNuevo :: [CompraMaterial]
+               , materialesExistente :: [CompraMaterial]
+               , servicios  :: [CompraServicio]
                } deriving (Generic, Show)
 instance ToJSON Compra where
  toEncoding = genericToEncoding defaultOptions
