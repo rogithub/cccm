@@ -13,14 +13,16 @@ import DataAccess.Commands
 import TableMappings.Types.Efectivo
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
+import Data.UUID
 
 toType :: [SqlValue] -> Efectivo
 toType row =
   Efectivo { idCuenta = fromSql (row!!0)::Int,
-    nombre = fromSql (row!!6)::String,
-    beneficiario = fromSql (row!!4)::String,
-    emailNotificacion = fromSql (row!!5)::Maybe String,
-    activo = fromSql (row!!8)::Bool }
+    guidCuenta = read (fromSql (row!!1)::String),
+    nombre = fromSql (row!!7)::String,
+    beneficiario = fromSql (row!!5)::String,
+    emailNotificacion = fromSql (row!!6)::Maybe String,
+    activo = fromSql (row!!9)::Bool }
 
 fromType :: Efectivo -> [SqlValue]
 fromType e =
@@ -28,6 +30,7 @@ fromType e =
   toSql $ beneficiario e,
   toSql $ emailNotificacion e,
   toSql $ activo e,
+  toSql $ toString (guidCuenta e),
   toSql $ idCuenta e]
 
 
@@ -38,14 +41,14 @@ selOneCmd key =
 savCmd :: Efectivo -> Command
 savCmd b =
   Command "INSERT INTO cuentas \
-  \ (banco, clabe, nocuenta, nombre, beneficiario, emailnotificacion, efectivo, activo) \
-  \ values ('','','',?,?,?,true,?)" (init $ fromType b)
+  \ (banco, clabe, nocuenta, nombre, beneficiario, emailnotificacion, efectivo, activo, guid) \
+  \ values ('','','',?,?,?,true,?,?)" (init $ fromType b)
 
 updateCmd :: Efectivo -> Command
 updateCmd b =
   Command "UPDATE cuentas SET \
   \ nombre=?, beneficiario=?, emailnotificacion=?, activo=? \
-  \ where id=?" (fromType b)
+  \ where guid=? and id=?" (fromType b)
 
 deleteCmd :: Int -> Command
 deleteCmd key =

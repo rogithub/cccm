@@ -13,17 +13,19 @@ import DataAccess.Commands
 import TableMappings.Types.Proveedor
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
+import Data.UUID
 
 toType :: [SqlValue] -> Proveedor
 toType row =
   Proveedor { idProveedor = fromSql (row!!0)::Int,
-    empresa = fromSql (row!!1)::String,
-    contacto = fromSql (row!!2)::String,
-    domicilio = fromSql (row!!3)::Maybe String,
-    telefono = fromSql (row!!4)::String,
-    email = fromSql (row!!5)::String,
-    comentarios = fromSql (row!!6)::Maybe String,
-    activo = fromSql (row!!7)::Bool }
+    guidProveedor = read (fromSql (row!!1)::String),
+    empresa = fromSql (row!!2)::String,
+    contacto = fromSql (row!!3)::String,
+    domicilio = fromSql (row!!4)::Maybe String,
+    telefono = fromSql (row!!5)::String,
+    email = fromSql (row!!6)::String,
+    comentarios = fromSql (row!!7)::Maybe String,
+    activo = fromSql (row!!8)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
 fromType p =
@@ -34,6 +36,7 @@ fromType p =
   toSql $ email  p,
   toSql $ comentarios p,
   toSql $ activo p,
+  toSql $ toString (guidProveedor p),
   toSql $ idProveedor p]
 
 getByNameCmd :: String -> Command
@@ -50,11 +53,11 @@ selOneCmd key =
 
 savCmd :: Proveedor -> Command
 savCmd p =
-  Command "INSERT INTO proveedores (empresa, contacto, domicilio, telefono, email, comentarios, activo) values (?,?,?,?,?,?,?)" (init $ fromType p)
+  Command "INSERT INTO proveedores (empresa, contacto, domicilio, telefono, email, comentarios, activo, guid) values (?,?,?,?,?,?,?,?)" (init $ fromType p)
 
 updateCmd :: Proveedor -> Command
 updateCmd p =
-  Command "UPDATE proveedores SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where id=?" (fromType p)
+  Command "UPDATE proveedores SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where guid=? and id=?" (fromType p)
 
 deleteCmd :: Int -> Command
 deleteCmd key =

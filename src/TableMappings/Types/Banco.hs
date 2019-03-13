@@ -9,7 +9,7 @@ import GHC.Generics
 import Data.UUID
 
 data Banco = Banco { idCuenta :: Int
-             , guidCuenta :: GUID
+             , guidCuenta :: UUID
              , banco :: String
              , clabe :: Maybe String
              , nocuenta :: Maybe String

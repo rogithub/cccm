@@ -13,17 +13,19 @@ import DataAccess.Commands
 import TableMappings.Types.Material
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
+import Data.UUID
 
 toType :: [SqlValue] -> Material
 toType row =
   Material { idMaterial = fromSql (row!!0)::Int,
-    nombre = fromSql (row!!1)::String,
-    color = fromSql (row!!2)::String,
-    unidad = fromSql (row!!3)::String,
-    marca = fromSql (row!!4)::Maybe String,
-    modelo = fromSql (row!!5)::Maybe String,
-    comentarios = fromSql (row!!6)::Maybe String,
-    activo = fromSql (row!!7)::Bool }
+    guidMaterial = read (fromSql (row!!1)::String),
+    nombre = fromSql (row!!2)::String,
+    color = fromSql (row!!3)::String,
+    unidad = fromSql (row!!4)::String,
+    marca = fromSql (row!!5)::Maybe String,
+    modelo = fromSql (row!!6)::Maybe String,
+    comentarios = fromSql (row!!7)::Maybe String,
+    activo = fromSql (row!!8)::Bool }
 
 fromType :: Material -> [SqlValue]
 fromType p =
@@ -34,6 +36,7 @@ fromType p =
   toSql $ modelo p,
   toSql $ comentarios p,
   toSql $ activo p,
+  toSql $ toString (guidMaterial p),
   toSql $ idMaterial p]
 
 getByNameCmd :: String -> Command
@@ -56,14 +59,14 @@ selOneCmd key =
 savCmd :: Material -> Command
 savCmd p =
   Command "INSERT INTO materiales \
-  \ (nombre, color, unidad, marca, modelo, comentarios, activo)\
-  \ values (?,?,?,?,?,?,?)" (init $ fromType p)
+  \ (nombre, color, unidad, marca, modelo, comentarios, activo, guid)\
+  \ values (?,?,?,?,?,?,?,?)" (init $ fromType p)
 
 updateCmd :: Material -> Command
 updateCmd p =
   Command "UPDATE materiales SET \
   \ nombre=?, color=?, unidad=?, marca=?, modelo=?, comentarios=?, activo=?\
-  \ where id=?" (fromType p)
+  \ where guid=? and id=?" (fromType p)
 
 deleteCmd :: Int -> Command
 deleteCmd key =
