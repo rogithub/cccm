@@ -5,8 +5,10 @@ module TableMappings.Types.Cliente
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
+import Data.UUID
 
 data Cliente = Cliente { idCliente :: Int
+               , guidCliente :: UUID
                , facturacionId :: Maybe Int
                , contacto :: String
                , empresa :: String

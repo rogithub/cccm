@@ -27,6 +27,7 @@ dependencies:
 - bytestring
 - aeson
 - time
+- uuid
 
 library:
   source-dirs: src

@@ -6,8 +6,10 @@ module TableMappings.Types.Efectivo
 
 import Data.Aeson
 import GHC.Generics
+import Data.UUID
 
 data Efectivo = Efectivo { idCuenta :: Int
+                , guidCuenta :: UUID
                 , nombre :: String
                 , beneficiario :: String
                 , emailNotificacion :: Maybe String

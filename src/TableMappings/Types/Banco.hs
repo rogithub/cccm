@@ -6,8 +6,10 @@ module TableMappings.Types.Banco
 
 import Data.Aeson
 import GHC.Generics
+import Data.UUID
 
 data Banco = Banco { idCuenta :: Int
+             , guidCuenta :: GUID
              , banco :: String
              , clabe :: Maybe String
              , nocuenta :: Maybe String

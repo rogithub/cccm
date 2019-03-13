@@ -4,8 +4,10 @@ module TableMappings.Types.Proveedor
 
 import Data.Aeson
 import GHC.Generics
+import Data.UUID
 
 data Proveedor = Proveedor { idProveedor :: Int
+              , guidProveedor :: UUID
               , empresa :: String
               , contacto :: String
               , domicilio :: Maybe String

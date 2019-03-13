@@ -4,8 +4,10 @@ module TableMappings.Types.Material
 
 import Data.Aeson
 import GHC.Generics
+import Data.UUID
 
 data Material = Material { idMaterial :: Int
+               , guidMaterial :: UUID
                , nombre :: String
                , color :: String
                , unidad :: String

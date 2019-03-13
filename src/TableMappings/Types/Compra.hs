@@ -5,9 +5,11 @@ module TableMappings.Types.Compra
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
+import Data.UUID
 
 data Compra = Compra { idCompra :: Int
-               , proveedorId :: Int
+               , guidCompra :: UUID 
+               , proveedorId :: Int  
                , fecha :: Day
                , docIdFacturaPdf :: Maybe Int
                , docIdFacturaXml :: Maybe Int
