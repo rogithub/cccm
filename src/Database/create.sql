@@ -1,3 +1,6 @@
+-- Extension for GUID generation
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Table: public.Proveedores
 
 -- DROP TABLE public.Proveedores;
