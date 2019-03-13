@@ -5,6 +5,7 @@ CREATE SEQUENCE Proveedores_id_seq START 1;
 CREATE TABLE public.Proveedores
 (
     id bigint NOT NULL DEFAULT nextval('Proveedores_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     empresa character varying(300),
     contacto character varying(300),
     domicilio character varying(300),
@@ -30,6 +31,7 @@ CREATE SEQUENCE Materiales_id_seq START 1;
 CREATE TABLE public.Materiales
 (
     id bigint NOT NULL DEFAULT nextval('Materiales_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     nombre character varying(300),
     color character varying(300),
     unidad character varying(300),
@@ -55,6 +57,7 @@ CREATE SEQUENCE Documentos_id_seq START 1;
 CREATE TABLE public.Documentos
 (
     id bigint NOT NULL DEFAULT nextval('Documentos_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     fileName character varying(300),
     bytes bytea,
     datechanged timestamp without time zone,
@@ -75,6 +78,7 @@ CREATE SEQUENCE DocumentosXml_id_seq START 1;
 CREATE TABLE public.DocumentosXml
 (
     id bigint NOT NULL DEFAULT nextval('DocumentosXml_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     fileName character varying(300),
     xml xml,
     datechanged timestamp without time zone,
@@ -95,6 +99,7 @@ CREATE SEQUENCE Cuentas_id_seq START 1;
 CREATE TABLE public.Cuentas
 (
     id bigint NOT NULL DEFAULT nextval('Cuentas_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     banco character varying(300),
     clabe character varying(18),
     noCuenta character varying(18),
@@ -121,6 +126,7 @@ CREATE SEQUENCE Pagos_id_seq START 1;
 CREATE TABLE public.Pagos
 (
     id bigint NOT NULL DEFAULT nextval('Pagos_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     motivo character varying(300),
     monto numeric(18,8),
     fechaCaptura timestamp without time zone,
@@ -156,6 +162,7 @@ CREATE SEQUENCE Egresos_id_seq START 1;
 CREATE TABLE public.Egresos
 (
     id bigint NOT NULL DEFAULT nextval('Egresos_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     pagoId bigint,
     proveedorId bigint,
     activo boolean,
@@ -181,6 +188,7 @@ CREATE SEQUENCE Compras_id_seq START 1;
 CREATE TABLE public.Compras
 (
     id bigint NOT NULL DEFAULT nextval('Compras_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     proveedorId bigint,
     fecha timestamp without time zone,
     docIdFacturaPdf bigint,
@@ -212,6 +220,7 @@ CREATE SEQUENCE ComprasMateriales_id_seq START 1;
 CREATE TABLE public.ComprasMateriales
 (
     id bigint NOT NULL DEFAULT nextval('ComprasMateriales_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     compraId bigint,
     materialId bigint,
     cantidad numeric(18,8),
@@ -238,6 +247,7 @@ CREATE SEQUENCE ComprasServicios_id_seq START 1;
 CREATE TABLE public.ComprasServicios
 (
     id bigint NOT NULL DEFAULT nextval('ComprasServicios_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     compraId bigint,
     descripcion character varying(500),
     cantidad numeric(18,8),
@@ -262,6 +272,7 @@ CREATE SEQUENCE DatosFacturacion_id_seq START 1;
 CREATE TABLE public.DatosFacturacion
 (
     id bigint NOT NULL DEFAULT nextval('DatosFacturacion_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     nombre character varying(300),
     calle character varying(300),
     noExterior character varying(300),
@@ -289,6 +300,7 @@ CREATE SEQUENCE Clientes_id_seq START 1;
 CREATE TABLE public.Clientes
 (
     id bigint NOT NULL DEFAULT nextval('Clientes_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     facturacionId bigint,
     contacto character varying(300),
     empresa character varying(300),
@@ -318,6 +330,7 @@ CREATE SEQUENCE ProveedoresCuentas_id_seq START 1;
 CREATE TABLE public.ProveedoresCuentas
 (
     id bigint NOT NULL DEFAULT nextval('ProveedoresCuentas_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),    
     proveedorId bigint,
     cuentaId bigint,
     CONSTRAINT ProveedoresCuentas_pkey PRIMARY KEY (id)
@@ -344,6 +357,7 @@ CREATE SEQUENCE ClientesCuentas_id_seq START 1;
 CREATE TABLE public.ClientesCuentas
 (
     id bigint NOT NULL DEFAULT nextval('ClientesCuentas_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     clienteId bigint,
     cuentaId bigint,
     CONSTRAINT ClientesCuentas_pkey PRIMARY KEY (id)
@@ -369,6 +383,7 @@ CREATE SEQUENCE Ingresos_id_seq START 1;
 CREATE TABLE public.Ingresos
 (
     id bigint NOT NULL DEFAULT nextval('Ingresos_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     pagoId bigint,
     clienteId bigint,
     activo boolean,
@@ -394,6 +409,7 @@ CREATE SEQUENCE Cotizaciones_id_seq START 1;
 CREATE TABLE public.Cotizaciones
 (
     id bigint NOT NULL DEFAULT nextval('Cotizaciones_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     clienteId bigint,
     fecha timestamp without time zone,
     docIdFacturaPdf bigint,
@@ -423,6 +439,7 @@ CREATE SEQUENCE Presupuestos_id_seq START 1;
 CREATE TABLE public.Presupuestos
 (
     id bigint NOT NULL DEFAULT nextval('Presupuestos_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     cantidad numeric(18,8),
     descripcion character varying(500),
     gastosPorcien numeric(18,8),
@@ -450,6 +467,7 @@ CREATE SEQUENCE ServiciosItems_id_seq START 1;
 CREATE TABLE public.ServiciosItems
 (
     id bigint NOT NULL DEFAULT nextval('ServiciosItems_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     presupuestoId bigint,
     cantidad numeric(18,8),
     descripcion character varying(500),
@@ -474,6 +492,7 @@ CREATE SEQUENCE MaterialesItems_id_seq START 1;
 CREATE TABLE public.MaterialesItems
 (
     id bigint NOT NULL DEFAULT nextval('MaterialesItems_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     presupuestoId bigint,
     materialId bigint,
     cantidad numeric(18,8),
@@ -501,6 +520,7 @@ CREATE SEQUENCE AbonosCotizaciones_id_seq START 1;
 CREATE TABLE public.AbonosCotizaciones
 (
     id bigint NOT NULL DEFAULT nextval('AbonosCotizaciones_id_seq'::regclass),
+    guid uuid DEFAULT uuid_generate_v4(),
     cotizacionId bigint,
     ingresoId bigint,
     CONSTRAINT AbonosCotizaciones_pkey PRIMARY KEY (id)
