@@ -16,7 +16,7 @@ CREATE TABLE public.Proveedores
     email character varying(100),
     comentarios character varying(500),
     activo boolean,
-    CONSTRAINT Proveedores_pkey PRIMARY KEY (id)
+    CONSTRAINT Proveedores_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -42,7 +42,7 @@ CREATE TABLE public.Materiales
     modelo character varying(300),
     comentarios character varying(500),
     activo boolean,
-    CONSTRAINT Materiales_pkey PRIMARY KEY (id)
+    CONSTRAINT Materiales_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -64,7 +64,7 @@ CREATE TABLE public.Documentos
     fileName character varying(300),
     bytes bytea,
     datechanged timestamp without time zone,
-    CONSTRAINT Documentos_pkey PRIMARY KEY (id)
+    CONSTRAINT Documentos_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -85,7 +85,7 @@ CREATE TABLE public.DocumentosXml
     fileName character varying(300),
     xml xml,
     datechanged timestamp without time zone,
-    CONSTRAINT DocumentosXml_pkey PRIMARY KEY (id)
+    CONSTRAINT DocumentosXml_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -111,7 +111,7 @@ CREATE TABLE public.Cuentas
     nombre character varying(300),
     efectivo boolean,
     activo boolean,
-    CONSTRAINT Cuentas_pkey PRIMARY KEY (id)
+    CONSTRAINT Cuentas_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -134,12 +134,12 @@ CREATE TABLE public.Pagos
     monto numeric(18,8),
     fechaCaptura timestamp without time zone,
     fechaAplicacion timestamp without time zone,
-    docIdNotaRemision bigint,
-    docIdTransfeBanco bigint,
-    cuentaOrigenId bigint,
-    cuentaDestinoId bigint,
+    docIdNotaRemision uuid,
+    docIdTransfeBanco uuid,
+    cuentaOrigenId uuid,
+    cuentaDestinoId uuid,
     activo boolean,
-    CONSTRAINT Pagos_pkey PRIMARY KEY (id)
+    CONSTRAINT Pagos_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -150,13 +150,13 @@ ALTER TABLE public.Pagos
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_IdNotaRemision_fkey FOREIGN KEY (docIdNotaRemision) REFERENCES public.Documentos(id);
+    ADD CONSTRAINT Pagos_IdNotaRemision_fkey FOREIGN KEY (docIdNotaRemision) REFERENCES public.Documentos(guid);
 ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_IdTransfeBanco_fkey FOREIGN KEY (docIdTransfeBanco) REFERENCES public.Documentos(id);
+    ADD CONSTRAINT Pagos_IdTransfeBanco_fkey FOREIGN KEY (docIdTransfeBanco) REFERENCES public.Documentos(guid);
 ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_cuentaOrigenId_fkey FOREIGN KEY (cuentaOrigenId) REFERENCES public.Cuentas(id);
+    ADD CONSTRAINT Pagos_cuentaOrigenId_fkey FOREIGN KEY (cuentaOrigenId) REFERENCES public.Cuentas(guid);
 ALTER TABLE ONLY public.Pagos
-    ADD CONSTRAINT Pagos_cuentaDestinoId_fkey FOREIGN KEY (cuentaDestinoId) REFERENCES public.Cuentas(id);
+    ADD CONSTRAINT Pagos_cuentaDestinoId_fkey FOREIGN KEY (cuentaDestinoId) REFERENCES public.Cuentas(guid);
 
 -- Table: public.Egresos
 
@@ -166,10 +166,10 @@ CREATE TABLE public.Egresos
 (
     id bigint NOT NULL DEFAULT nextval('Egresos_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    pagoId bigint,
-    proveedorId bigint,
+    pagoId uuid,
+    proveedorId uuid,
     activo boolean,
-    CONSTRAINT Egresos_pkey PRIMARY KEY (id)
+    CONSTRAINT Egresos_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -180,9 +180,9 @@ ALTER TABLE public.Egresos
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Egresos
-    ADD CONSTRAINT Egresos_pagoId_fkey FOREIGN KEY (pagoId) REFERENCES public.Pagos(id);
+    ADD CONSTRAINT Egresos_pagoId_fkey FOREIGN KEY (pagoId) REFERENCES public.Pagos(guid);
 ALTER TABLE ONLY public.Egresos
-    ADD CONSTRAINT Egresos_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
+    ADD CONSTRAINT Egresos_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(guid);
 
 -- Table: public.Compras
 
@@ -192,13 +192,13 @@ CREATE TABLE public.Compras
 (
     id bigint NOT NULL DEFAULT nextval('Compras_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    proveedorId bigint,
+    proveedorId uuid,
     fecha timestamp without time zone,
-    docIdFacturaPdf bigint,
-    docIdFacturaXml bigint,
+    docIdFacturaPdf uuid,
+    docIdFacturaXml uuid,
     ivaPorcien numeric(18,8),
     activo boolean,
-    CONSTRAINT Compras_pkey PRIMARY KEY (id)
+    CONSTRAINT Compras_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -209,11 +209,11 @@ ALTER TABLE public.Compras
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Compras
-    ADD CONSTRAINT Compras_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
+    ADD CONSTRAINT Compras_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(guid);
 ALTER TABLE ONLY public.Compras
-    ADD CONSTRAINT Compras_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(id);
+    ADD CONSTRAINT Compras_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(guid);
 ALTER TABLE ONLY public.Compras
-    ADD CONSTRAINT Compras_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(id);
+    ADD CONSTRAINT Compras_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(guid);
 
 
 -- Table: public.ComprasMateriales
@@ -224,11 +224,11 @@ CREATE TABLE public.ComprasMateriales
 (
     id bigint NOT NULL DEFAULT nextval('ComprasMateriales_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    compraId bigint,
-    materialId bigint,
+    compraId uuid,
+    materialId uuid,
     cantidad numeric(18,8),
     precio numeric(18,8),
-    CONSTRAINT ComprasMateriales_pkey PRIMARY KEY (id)
+    CONSTRAINT ComprasMateriales_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -239,9 +239,9 @@ ALTER TABLE public.ComprasMateriales
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ComprasMateriales
-    ADD CONSTRAINT ComprasMateriales_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(id);
+    ADD CONSTRAINT ComprasMateriales_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(guid);
 ALTER TABLE ONLY public.ComprasMateriales
-    ADD CONSTRAINT ComprasMateriales_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(id);
+    ADD CONSTRAINT ComprasMateriales_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(guid);
 
 -- Table: public.ComprasServicios
 
@@ -251,11 +251,11 @@ CREATE TABLE public.ComprasServicios
 (
     id bigint NOT NULL DEFAULT nextval('ComprasServicios_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    compraId bigint,
+    compraId uuid,
     descripcion character varying(500),
     cantidad numeric(18,8),
     precio numeric(18,8),
-    CONSTRAINT ComprasServicios_pkey PRIMARY KEY (id)
+    CONSTRAINT ComprasServicios_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -266,7 +266,7 @@ ALTER TABLE public.ComprasServicios
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ComprasServicios
-    ADD CONSTRAINT ComprasServicios_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(id);
+    ADD CONSTRAINT ComprasServicios_compraId_fkey FOREIGN KEY (compraId) REFERENCES public.Compras(guid);
 
 -- Table: public.DatosFacturacion
 
@@ -286,7 +286,7 @@ CREATE TABLE public.DatosFacturacion
     cp character varying(30),
     rfc character varying(30),
     email character varying(300),
-    CONSTRAINT DatosFacturacion_pkey PRIMARY KEY (id)
+    CONSTRAINT DatosFacturacion_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -304,7 +304,7 @@ CREATE TABLE public.Clientes
 (
     id bigint NOT NULL DEFAULT nextval('Clientes_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    facturacionId bigint,
+    facturacionId uuid,
     contacto character varying(300),
     empresa character varying(300),
     telefono character varying(300),
@@ -312,7 +312,7 @@ CREATE TABLE public.Clientes
     domicilio character varying(300),
     fechaCreado timestamp without time zone,
     activo boolean,
-    CONSTRAINT Clientes_pkey PRIMARY KEY (id)
+    CONSTRAINT Clientes_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -323,7 +323,7 @@ ALTER TABLE public.Clientes
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Clientes
-    ADD CONSTRAINT Clientes_facturacionId_fkey FOREIGN KEY (facturacionId) REFERENCES public.DatosFacturacion(id);
+    ADD CONSTRAINT Clientes_facturacionId_fkey FOREIGN KEY (facturacionId) REFERENCES public.DatosFacturacion(guid);
 
 
 -- Table: public.ProveedoresCuentas
@@ -334,9 +334,9 @@ CREATE TABLE public.ProveedoresCuentas
 (
     id bigint NOT NULL DEFAULT nextval('ProveedoresCuentas_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),    
-    proveedorId bigint,
-    cuentaId bigint,
-    CONSTRAINT ProveedoresCuentas_pkey PRIMARY KEY (id)
+    proveedorId uuid,
+    cuentaId uuid,
+    CONSTRAINT ProveedoresCuentas_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -347,10 +347,10 @@ ALTER TABLE public.ProveedoresCuentas
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ProveedoresCuentas
-    ADD CONSTRAINT ProveedoresCuentas_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(id);
+    ADD CONSTRAINT ProveedoresCuentas_proveedorId_fkey FOREIGN KEY (proveedorId) REFERENCES public.Proveedores(guid);
 
 ALTER TABLE ONLY public.ProveedoresCuentas
-    ADD CONSTRAINT ProveedoresCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(id);
+    ADD CONSTRAINT ProveedoresCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(guid);
 
 
 -- Table: public.ClientesCuentas
@@ -361,9 +361,9 @@ CREATE TABLE public.ClientesCuentas
 (
     id bigint NOT NULL DEFAULT nextval('ClientesCuentas_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    clienteId bigint,
-    cuentaId bigint,
-    CONSTRAINT ClientesCuentas_pkey PRIMARY KEY (id)
+    clienteId uuid,
+    cuentaId uuid,
+    CONSTRAINT ClientesCuentas_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -374,10 +374,10 @@ ALTER TABLE public.ClientesCuentas
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ClientesCuentas
-    ADD CONSTRAINT ClientesCuentas_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+    ADD CONSTRAINT ClientesCuentas_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(guid);
 
 ALTER TABLE ONLY public.ClientesCuentas
-    ADD CONSTRAINT ClientesCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(id);
+    ADD CONSTRAINT ClientesCuentas_cuentaId_fkey FOREIGN KEY (cuentaId) REFERENCES public.Cuentas(guid);
 
 -- Table: public.Ingresos
 
@@ -387,10 +387,10 @@ CREATE TABLE public.Ingresos
 (
     id bigint NOT NULL DEFAULT nextval('Ingresos_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    pagoId bigint,
-    clienteId bigint,
+    pagoId uuid,
+    clienteId uuid,
     activo boolean,
-    CONSTRAINT Ingresos_pkey PRIMARY KEY (id)
+    CONSTRAINT Ingresos_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -401,9 +401,9 @@ ALTER TABLE public.Ingresos
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Ingresos
-    ADD CONSTRAINT Ingresos_pagoId_fkey FOREIGN KEY (pagoId) REFERENCES public.Pagos(id);
+    ADD CONSTRAINT Ingresos_pagoId_fkey FOREIGN KEY (pagoId) REFERENCES public.Pagos(guid);
 ALTER TABLE ONLY public.Ingresos
-    ADD CONSTRAINT Ingresos_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+    ADD CONSTRAINT Ingresos_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(guid);
 
 -- Table: public.Cotizaciones
 
@@ -413,12 +413,12 @@ CREATE TABLE public.Cotizaciones
 (
     id bigint NOT NULL DEFAULT nextval('Cotizaciones_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    clienteId bigint,
+    clienteId uuid,
     fecha timestamp without time zone,
-    docIdFacturaPdf bigint,
-    docIdFacturaXml bigint,
+    docIdFacturaPdf uuid,
+    docIdFacturaXml uuid,
     activo boolean,
-    CONSTRAINT Cotizaciones_pkey PRIMARY KEY (id)
+    CONSTRAINT Cotizaciones_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -429,11 +429,11 @@ ALTER TABLE public.Cotizaciones
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Cotizaciones
-    ADD CONSTRAINT Cotizaciones_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(id);
+    ADD CONSTRAINT Cotizaciones_clienteId_fkey FOREIGN KEY (clienteId) REFERENCES public.Clientes(guid);
 ALTER TABLE ONLY public.Cotizaciones
-    ADD CONSTRAINT Cotizaciones_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(id);
+    ADD CONSTRAINT Cotizaciones_IdFacturaPdf_fkey FOREIGN KEY (docIdFacturaPdf) REFERENCES public.Documentos(guid);
 ALTER TABLE ONLY public.Cotizaciones
-    ADD CONSTRAINT Cotizaciones_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(id);
+    ADD CONSTRAINT Cotizaciones_IdFacturaXml_fkey FOREIGN KEY (docIdFacturaXml) REFERENCES public.DocumentosXml(guid);
 
 -- Table: public.Presupuestos
 
@@ -448,8 +448,8 @@ CREATE TABLE public.Presupuestos
     gastosPorcien numeric(18,8),
     gananciasPorcien numeric(18,8),
     ivaPorcien numeric(18,8),
-    cotizacionId bigint,
-    CONSTRAINT Presupuestos_pkey PRIMARY KEY (id)
+    cotizacionId uuid,
+    CONSTRAINT Presupuestos_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -460,7 +460,7 @@ ALTER TABLE public.Presupuestos
     OWNER to postgres;
 
 ALTER TABLE ONLY public.Presupuestos
-    ADD CONSTRAINT Presupuestos_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(id);
+    ADD CONSTRAINT Presupuestos_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(guid);
 
 
 -- Table: public.ServiciosItems
@@ -471,11 +471,11 @@ CREATE TABLE public.ServiciosItems
 (
     id bigint NOT NULL DEFAULT nextval('ServiciosItems_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    presupuestoId bigint,
+    presupuestoId uuid,
     cantidad numeric(18,8),
     descripcion character varying(500),
     precio numeric(18,8),
-    CONSTRAINT ServiciosItems_pkey PRIMARY KEY (id)
+    CONSTRAINT ServiciosItems_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -486,7 +486,7 @@ ALTER TABLE public.ServiciosItems
     OWNER to postgres;
 
 ALTER TABLE ONLY public.ServiciosItems
-    ADD CONSTRAINT ServiciosItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(id);
+    ADD CONSTRAINT ServiciosItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(guid);
 
 -- Table: public.MaterialesItems
 
@@ -496,11 +496,11 @@ CREATE TABLE public.MaterialesItems
 (
     id bigint NOT NULL DEFAULT nextval('MaterialesItems_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    presupuestoId bigint,
-    materialId bigint,
+    presupuestoId uuid,
+    materialId uuid,
     cantidad numeric(18,8),
     precio numeric(18,8),
-    CONSTRAINT MaterialesItems_pkey PRIMARY KEY (id)
+    CONSTRAINT MaterialesItems_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -511,9 +511,9 @@ ALTER TABLE public.MaterialesItems
     OWNER to postgres;
 
 ALTER TABLE ONLY public.MaterialesItems
-    ADD CONSTRAINT MaterialesItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(id);
+    ADD CONSTRAINT MaterialesItems_presupuestoId_fkey FOREIGN KEY (presupuestoId) REFERENCES public.Presupuestos(guid);
 ALTER TABLE ONLY public.MaterialesItems
-    ADD CONSTRAINT MaterialesItems_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(id);
+    ADD CONSTRAINT MaterialesItems_materialId_fkey FOREIGN KEY (materialId) REFERENCES public.Materiales(guid);
 
 
 -- Table: public.AbonosCotizaciones
@@ -524,9 +524,9 @@ CREATE TABLE public.AbonosCotizaciones
 (
     id bigint NOT NULL DEFAULT nextval('AbonosCotizaciones_id_seq'::regclass),
     guid uuid DEFAULT uuid_generate_v4(),
-    cotizacionId bigint,
-    ingresoId bigint,
-    CONSTRAINT AbonosCotizaciones_pkey PRIMARY KEY (id)
+    cotizacionId uuid,
+    ingresoId uuid,
+    CONSTRAINT AbonosCotizaciones_pkey PRIMARY KEY (guid)
 )
 WITH (
     OIDS = FALSE
@@ -537,6 +537,6 @@ ALTER TABLE public.AbonosCotizaciones
     OWNER to postgres;
 
 ALTER TABLE ONLY public.AbonosCotizaciones
-    ADD CONSTRAINT AbonosCotizaciones_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(id);
+    ADD CONSTRAINT AbonosCotizaciones_cotizacionId_fkey FOREIGN KEY (cotizacionId) REFERENCES public.Cotizaciones(guid);
 ALTER TABLE ONLY public.AbonosCotizaciones
-    ADD CONSTRAINT AbonosCotizaciones_ingresoId_fkey FOREIGN KEY (ingresoId) REFERENCES public.Ingresos(id);
+    ADD CONSTRAINT AbonosCotizaciones_ingresoId_fkey FOREIGN KEY (ingresoId) REFERENCES public.Ingresos(guid);
