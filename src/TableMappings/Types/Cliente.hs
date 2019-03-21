@@ -9,7 +9,7 @@ import Data.UUID
 
 data Cliente = Cliente { idCliente :: Int
                , guidCliente :: UUID
-               , facturacionId :: Maybe Int
+               , facturacionId :: Maybe UUID
                , contacto :: String
                , empresa :: String
                , telefono :: Maybe String

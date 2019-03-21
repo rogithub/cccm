@@ -9,8 +9,8 @@ import Data.UUID
 
 data CompraMaterial = CompraMaterial { idCompraMaterial :: Int
                , guidCompraMaterial :: UUID
-               , compraId :: Int
-               , materialId :: Int
+               , compraId :: UUID
+               , materialId :: UUID
                , cantidad :: Double
                , precio :: Double
                } deriving (Generic, Show)

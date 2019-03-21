@@ -9,10 +9,10 @@ import Data.UUID
 
 data Compra = Compra { idCompra :: Int
                , guidCompra :: UUID 
-               , proveedorId :: Int  
+               , proveedorId :: UUID 
                , fecha :: Day
-               , docIdFacturaPdf :: Maybe Int
-               , docIdFacturaXml :: Maybe Int
+               , docIdFacturaPdf :: Maybe UUID
+               , docIdFacturaXml :: Maybe UUID
                , iva :: Double
                , activo :: Bool
                } deriving (Generic, Show)
