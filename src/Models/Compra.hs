@@ -7,10 +7,12 @@ import GHC.Generics
 import Data.Time.Calendar
 import Models.CompraMaterial
 import Models.CompraServicio
+import Data.UUID
 
 data Compra = Compra { activo :: Bool
                , idCompra :: Int
-               , proveedorId :: Int
+               , guidCompra :: UUID
+               , guidProveedor :: UUID
                , fecha :: DotNetTime
                , iva :: Double
                , materialesNuevo :: [CompraMaterial]
