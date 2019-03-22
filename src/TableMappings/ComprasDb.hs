@@ -8,7 +8,6 @@ module TableMappings.ComprasDb
 
 import Database.HDBC
 import DataAccess.Commands
---import DataAccess.ConverterUUID as Converter
 import TableMappings.Types.Compra
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
