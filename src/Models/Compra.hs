@@ -20,6 +20,6 @@ data Compra = Compra { activo :: Bool
                , servicios  :: [CompraServicio]
                } deriving (Generic, Show)
 instance ToJSON Compra where
- toEncoding = genericToEncoding defaultOptions
+  toEncoding = genericToEncoding defaultOptions
 
 instance FromJSON Compra
