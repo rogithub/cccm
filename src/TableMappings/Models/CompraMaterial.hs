@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Models.CompraMaterial
+module TableMappings.Models.CompraMaterial
 ( CompraMaterial(..) ) where
 
 import Data.Aeson
@@ -8,10 +8,9 @@ import Data.Time.Calendar
 import TableMappings.Types.Material
 
 data CompraMaterial = CompraMaterial { material :: Material
-                , cantidad :: Double
-                , precio :: Double
-
-               } deriving (Generic, Show)
+                                          , cantidad :: Double
+                                          , precio :: Double
+                                          } deriving (Generic, Show)
 instance ToJSON CompraMaterial where
  toEncoding = genericToEncoding defaultOptions
 

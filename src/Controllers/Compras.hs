@@ -6,13 +6,13 @@ module Controllers.Compras
 
 import Data.Aeson
 import Controllers.Helper
-import Models.Compra
-import Business.Compras as Business
+import TableMappings.Models.Compra
+import TableMappings.ComprasModelDb as Db
+
 import Happstack.Server           (Response, ServerPart, method, look,
                                   Method(GET, HEAD, POST, PUT, OPTIONS, DELETE),
                                   askRq, unBody, RqBody, rqBody)
 import Control.Monad.IO.Class     ( liftIO )
-import TableMappings.MaterialesDb as Db
 
 post :: ServerPart Response
 post = do
@@ -22,5 +22,5 @@ post = do
   let compra = case body of
         Just rqbody -> decode (unBody rqbody) :: Maybe Compra
         Nothing     -> Nothing
-  logReq ("[POST] compras/" ++ (show compra))
-  okJSON (Business.save compra)
+  logReq ("[POST] compras/" ++ (show body))
+  okJSON (Db.save compra)

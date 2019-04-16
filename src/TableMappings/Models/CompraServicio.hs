@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Models.CompraServicio
+module TableMappings.Models.CompraServicio
 ( CompraServicio(..) ) where
 
 import Data.Aeson
@@ -13,7 +13,7 @@ data CompraServicio =
                  , descripcion :: String
                  , cantidad :: Double
                  , precio :: Double
-               } deriving (Generic, Show)
+                 } deriving (Generic, Show)
 instance ToJSON CompraServicio where
  toEncoding = genericToEncoding defaultOptions
 
