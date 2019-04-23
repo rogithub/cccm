@@ -24,24 +24,24 @@ instance ToJSON Material where
 instance FromJSON Material
 
 instance DbRow Material where
-  toType row =
-    Material { idMaterial = fromSql (row!!0)::Int,
-               guidMaterial = read (fromSql (row!!1)::String),
-               nombre = fromSql (row!!2)::String,
-               color = fromSql (row!!3)::String,
-               unidad = fromSql (row!!4)::String,
-               marca = fromSql (row!!5)::Maybe String,
-               modelo = fromSql (row!!6)::Maybe String,
-               comentarios = fromSql (row!!7)::Maybe String,
-               activo = fromSql (row!!8)::Bool }
+  toType r =
+    Material { idMaterial = fromSql (r!!0)::Int,
+               guidMaterial = read (fromSql (r!!1)::String),
+               nombre = fromSql (r!!2)::String,
+               color = fromSql (r!!3)::String,
+               unidad = fromSql (r!!4)::String,
+               marca = fromSql (r!!5)::Maybe String,
+               modelo = fromSql (r!!6)::Maybe String,
+               comentarios = fromSql (r!!7)::Maybe String,
+               activo = fromSql (r!!8)::Bool }
 
-  fromType p =
-    [toSql $ nombre p,
-     toSql $ color p,
-     toSql $ unidad p,
-     toSql $ marca p,
-     toSql $ modelo p,
-     toSql $ comentarios p,
-     toSql $ activo p,
-     toSql $ toString (guidMaterial p),
-     toSql $ idMaterial p]
+  fromType t =
+    [toSql $ nombre t,
+     toSql $ color t,
+     toSql $ unidad t,
+     toSql $ marca t,
+     toSql $ modelo t,
+     toSql $ comentarios t,
+     toSql $ activo t,
+     toSql $ toString (guidMaterial t),
+     toSql $ idMaterial t]
