@@ -14,30 +14,8 @@ import TableMappings.Types.Material
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
+import TableMappings.Types.DbRowClass
 
-toType :: [SqlValue] -> Material
-toType row =
-  Material { idMaterial = fromSql (row!!0)::Int,
-    guidMaterial = read (fromSql (row!!1)::String),
-    nombre = fromSql (row!!2)::String,
-    color = fromSql (row!!3)::String,
-    unidad = fromSql (row!!4)::String,
-    marca = fromSql (row!!5)::Maybe String,
-    modelo = fromSql (row!!6)::Maybe String,
-    comentarios = fromSql (row!!7)::Maybe String,
-    activo = fromSql (row!!8)::Bool }
-
-fromType :: Material -> [SqlValue]
-fromType p =
-  [toSql $ nombre p,
-  toSql $ color p,
-  toSql $ unidad p,
-  toSql $ marca p,
-  toSql $ modelo p,
-  toSql $ comentarios p,
-  toSql $ activo p,
-  toSql $ toString (guidMaterial p),
-  toSql $ idMaterial p]
 
 getByNameCmd :: String -> Command
 getByNameCmd name =

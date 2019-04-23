@@ -1,6 +1,8 @@
 module TableMappings.Types.DbRowClass
 (
-  DbRow
+  DbRow,
+  toType,
+  fromType
 ) where  
 
 import Database.HDBC
