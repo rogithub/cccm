@@ -14,30 +14,7 @@ import TableMappings.Types.Proveedor
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
-
-toType :: [SqlValue] -> Proveedor
-toType row =
-  Proveedor { idProveedor = fromSql (row!!0)::Int,
-    guidProveedor = read (fromSql (row!!1)::String),
-    empresa = fromSql (row!!2)::String,
-    contacto = fromSql (row!!3)::String,
-    domicilio = fromSql (row!!4)::Maybe String,
-    telefono = fromSql (row!!5)::String,
-    email = fromSql (row!!6)::String,
-    comentarios = fromSql (row!!7)::Maybe String,
-    activo = fromSql (row!!8)::Bool }
-
-fromType :: Proveedor -> [SqlValue]
-fromType p =
-  [toSql $ empresa p,
-  toSql $ contacto p,
-  toSql $ domicilio p,
-  toSql $ telefono p,
-  toSql $ email  p,
-  toSql $ comentarios p,
-  toSql $ activo p,
-  toSql $ toString (guidProveedor p),
-  toSql $ idProveedor p]
+import TableMappings.Types.DbRowClass
 
 getByNameCmd :: String -> Command
 getByNameCmd name =
