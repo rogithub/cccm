@@ -12,27 +12,9 @@ import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.Efectivo
 import TableMappings.Types.PageResult
+import TableMappings.Types.DbRowClass
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
-
-toType :: [SqlValue] -> Efectivo
-toType row =
-  Efectivo { idCuenta = fromSql (row!!0)::Int,
-    guidCuenta = read (fromSql (row!!1)::String),
-    nombre = fromSql (row!!7)::String,
-    beneficiario = fromSql (row!!5)::String,
-    emailNotificacion = fromSql (row!!6)::Maybe String,
-    activo = fromSql (row!!9)::Bool }
-
-fromType :: Efectivo -> [SqlValue]
-fromType e =
-  [toSql $ nombre e,
-  toSql $ beneficiario e,
-  toSql $ emailNotificacion e,
-  toSql $ activo e,
-  toSql $ toString (guidCuenta e),
-  toSql $ idCuenta e]
-
 
 selOneCmd :: Int -> Command
 selOneCmd key =

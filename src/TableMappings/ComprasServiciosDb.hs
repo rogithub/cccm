@@ -10,26 +10,9 @@ import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.CompraServicio
 import TableMappings.Types.PageResult
+import TableMappings.Types.DbRowClass
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
-
-toType :: [SqlValue] -> CompraServicio
-toType row =
-  CompraServicio { idCompraServicio = fromSql (row!!0) :: Int,
-                   guidCompraServicio = read (fromSql (row!!1) :: String),
-                   compraId = read (fromSql (row!!2) :: String),
-                   descripcion = fromSql (row!!3) :: String,
-                   cantidad = fromSql (row!!4) :: Double,
-                   precio = fromSql (row!!5) :: Double }
-
-fromType :: CompraServicio -> [SqlValue]
-fromType c =
-  [ toSql $ toString (compraId c),
-  toSql $ descripcion c,
-  toSql $ cantidad c,
-  toSql $ precio c,
-  toSql $ toString (guidCompraServicio c),
-  toSql $ idCompraServicio c ]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
