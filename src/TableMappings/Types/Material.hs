@@ -5,7 +5,7 @@ module TableMappings.Types.Material
 import Data.Aeson
 import GHC.Generics
 import Data.UUID
-import TableMappings.Types.DbRowClass
+import TableMappings.Types.DbRow
 import Database.HDBC
 
 data Material = Material { idMaterial :: Int
@@ -23,7 +23,7 @@ instance ToJSON Material where
 
 instance FromJSON Material
 
-instance DbRow Material where
+instance ToType Material where
   toType r =
     Material { idMaterial = fromSql (r!!0)::Int,
                guidMaterial = read (fromSql (r!!1)::String),
@@ -35,6 +35,7 @@ instance DbRow Material where
                comentarios = fromSql (r!!7)::Maybe String,
                activo = fromSql (r!!8)::Bool }
 
+instance FromType Material where
   fromType t =
     [toSql $ nombre t,
      toSql $ color t,

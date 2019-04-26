@@ -14,7 +14,7 @@ import TableMappings.Types.Material
 import TableMappings.Types.PageResult
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
-import TableMappings.Types.DbRowClass
+import TableMappings.Types.DbRow
 
 
 getByNameCmd :: String -> Command

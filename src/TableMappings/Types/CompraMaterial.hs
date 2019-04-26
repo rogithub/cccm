@@ -6,7 +6,7 @@ import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
 import Data.UUID
-import TableMappings.Types.DbRowClass
+import TableMappings.Types.DbRow
 import Database.HDBC
 
 data CompraMaterial = CompraMaterial { idCompraMaterial :: Int
@@ -21,7 +21,7 @@ instance ToJSON CompraMaterial where
 
 instance FromJSON CompraMaterial
 
-instance DbRow CompraMaterial where
+instance ToType CompraMaterial where
   toType row =
     CompraMaterial { idCompraMaterial = fromSql (row!!0) :: Int,
                      guidCompraMaterial = read (fromSql (row!!1) :: String),
@@ -30,7 +30,7 @@ instance DbRow CompraMaterial where
                      cantidad = fromSql (row!!4) :: Double,
                      precio = fromSql (row!!5) :: Double }
 
-
+instance FromType CompraMaterial where
   fromType m =
     [ toSql $ toString (compraId m),
       toSql $ toString (materialId m),

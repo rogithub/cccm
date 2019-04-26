@@ -7,7 +7,7 @@ module TableMappings.Types.Efectivo
 import Data.Aeson
 import GHC.Generics
 import Data.UUID
-import TableMappings.Types.DbRowClass
+import TableMappings.Types.DbRow
 import Database.HDBC
 
 data Efectivo = Efectivo { idCuenta :: Int
@@ -22,7 +22,7 @@ instance ToJSON Efectivo where
 
 instance FromJSON Efectivo
 
-instance DbRow Efectivo where
+instance ToType Efectivo where
   toType row =
     Efectivo { idCuenta = fromSql (row!!0)::Int,
                guidCuenta = read (fromSql (row!!1)::String),
@@ -31,6 +31,7 @@ instance DbRow Efectivo where
                emailNotificacion = fromSql (row!!6)::Maybe String,
                activo = fromSql (row!!9)::Bool }
 
+instance FromType Efectivo where
   fromType e =
     [toSql $ nombre e,
      toSql $ beneficiario e,

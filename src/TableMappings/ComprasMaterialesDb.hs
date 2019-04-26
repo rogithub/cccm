@@ -10,7 +10,7 @@ import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.CompraMaterial
 import TableMappings.Types.PageResult
-import TableMappings.Types.DbRowClass
+import TableMappings.Types.DbRow
 import TableMappings.BaseDb as BaseDb
 import Data.UUID
 
