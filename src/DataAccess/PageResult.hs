@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module TableMappings.Types.PageResult
+module DataAccess.PageResult
 ( PageResult(..) ) where
 
 import Data.Aeson

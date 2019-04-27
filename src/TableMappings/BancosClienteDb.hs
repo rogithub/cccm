@@ -10,8 +10,7 @@ module TableMappings.BancosClienteDb
 import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.Banco
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
+import DataAccess.PageResult
 import TableMappings.BancosBaseDb as BancosBaseDb
 
 selCmd :: Int -> Command
@@ -24,4 +23,4 @@ selCmd clienteId =
 getAll :: Int -> IO [Banco]
 getAll clienteId = do
   let cmd = selCmd clienteId
-  BaseDb.rowsToType cmd toType
+  rowsToType cmd toType

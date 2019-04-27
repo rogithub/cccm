@@ -9,9 +9,8 @@ module TableMappings.EfectivosClienteDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.Efectivo
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
 import TableMappings.EfectivosBaseDb as EfectivosBaseDb
 
 selCmd :: Int -> Command
@@ -24,4 +23,4 @@ selCmd clienteId =
 getAll :: Int -> IO [Efectivo]
 getAll clienteId = do
   let cmd = selCmd clienteId
-  BaseDb.rowsToType cmd toType
+  rowsToType cmd toType

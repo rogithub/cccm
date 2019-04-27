@@ -18,9 +18,8 @@ module TableMappings.MaterialesDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.Material
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
 import Data.UUID
 
 toType :: [SqlValue] -> Material
@@ -84,17 +83,17 @@ deleteCmd key =
 getByName :: String -> IO [Material]
 getByName name = do
   let cmd = getByNameCmd name
-  BaseDb.rowsToType cmd toType
+  rowsToType cmd toType
 
 getAll :: Int -> Int -> String -> IO (PageResult Material)
 getAll offset pageSize name = do
   let cmd = selCmd offset pageSize name
-  BaseDb.getPageResult cmd toType
+  getPageResult cmd toType
 
 getOne :: Int -> IO (Maybe Material)
 getOne key = do
   let cmd = selOneCmd key
-  BaseDb.rowToType cmd toType
+  rowToType cmd toType
 
 save :: (Maybe Material) -> IO Integer
 save Nothing  = return 0

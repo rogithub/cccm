@@ -15,9 +15,8 @@ module TableMappings.ComprasMaterialesDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.CompraMaterial
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
 import Data.UUID
 
 toType :: [SqlValue] -> CompraMaterial 
@@ -58,7 +57,7 @@ deleteCmd key =
 getOne :: Int -> IO (Maybe CompraMaterial)
 getOne key = do
   let cmd = selOneCmd key
-  BaseDb.rowToType cmd toType
+  rowToType cmd toType
 
 save :: (Maybe CompraMaterial) -> IO Integer
 save Nothing = return 0

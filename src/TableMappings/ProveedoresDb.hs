@@ -17,9 +17,8 @@ module TableMappings.ProveedoresDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.Proveedor
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb
 import Data.UUID
 
 toType :: [SqlValue] -> Proveedor

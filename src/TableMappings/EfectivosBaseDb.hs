@@ -16,9 +16,8 @@ module TableMappings.EfectivosBaseDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.Efectivo
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb
 import Data.UUID
 
 toType :: [SqlValue] -> Efectivo

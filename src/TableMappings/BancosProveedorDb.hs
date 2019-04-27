@@ -9,9 +9,8 @@ module TableMappings.BancosProveedorDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.Banco
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
 import TableMappings.BancosBaseDb as BancosBaseDb
 
 selCmd :: Int -> Command
@@ -24,4 +23,4 @@ selCmd proveedorId =
 getAll :: Int -> IO [Banco]
 getAll proveedorId = do
   let cmd = selCmd proveedorId
-  BaseDb.rowsToType cmd toType
+  rowsToType cmd toType

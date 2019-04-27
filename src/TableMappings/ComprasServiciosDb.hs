@@ -8,9 +8,8 @@ module TableMappings.ComprasServiciosDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.PageResult
 import TableMappings.Types.CompraServicio
-import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
 import Data.UUID
 
 toType :: [SqlValue] -> CompraServicio
