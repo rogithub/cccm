@@ -4,8 +4,14 @@ module TableMappings.EfectivosBaseDb
   save,
   update,
   delete,
+
   toType,
-  fromType
+  fromType,
+  selOneCmd,
+  savCmd,
+  updateCmd,
+  deleteCmd
+  
 ) where
 
 import Database.HDBC

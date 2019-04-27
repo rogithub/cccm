@@ -5,7 +5,15 @@ module TableMappings.MaterialesDb
   save,
   update,
   delete,
-  getByName
+  getByName,
+
+  toType,
+  fromType,
+  selOneCmd,
+  savCmd,
+  updateCmd,
+  deleteCmd
+  
 ) where
 
 import Database.HDBC

@@ -3,7 +3,14 @@ module TableMappings.ComprasMaterialesDb
   getOne,
   save,
   update,
-  delete
+  delete,
+  
+  toType,
+  fromType,
+  selOneCmd,
+  savCmd,
+  updateCmd,
+  deleteCmd
 ) where
 
 import Database.HDBC
