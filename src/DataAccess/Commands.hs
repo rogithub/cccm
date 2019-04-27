@@ -10,16 +10,15 @@ import DataAccess.Db
 
 data Command = Command String [SqlValue] deriving (Show)
 
-
-addSepparator :: String -> String -> String
-addSepparator [] [] = []
-addSepparator s1 [] = s1
-addSepparator [] s2 = s2
-addSepparator s1 s2 = s1 ++ ";" ++ s2
+cmdSepparator :: String -> String -> String
+cmdSepparator [] [] = []
+cmdSepparator s1 [] = s1
+cmdSepparator [] s2 = s2
+cmdSepparator s1 s2 = s1 ++ ";" ++ s2
 
 joinCmd :: Command -> Command -> Command
 joinCmd (Command sql1 params1) (Command sql2 params2) =
-  Command (addSepparator sql1 sql2) (params1 ++ params2) 
+  Command (cmdSepparator sql1 sql2) (params1 ++ params2) 
 
 instance Semigroup Command where
   (<>) = joinCmd 
