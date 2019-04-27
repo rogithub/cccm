@@ -12,9 +12,26 @@ import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.Efectivo
 import TableMappings.Types.PageResult
-import TableMappings.Types.DbRow
-import TableMappings.BaseDb as BaseDb
+import TableMappings.BaseDb
 import Data.UUID
+
+toType :: [SqlValue] -> Efectivo
+toType row =
+  Efectivo { idCuenta = fromSql (row!!0)::Int,
+             guidCuenta = read (fromSql (row!!1)::String),
+             nombre = fromSql (row!!7)::String,
+             beneficiario = fromSql (row!!5)::String,
+             emailNotificacion = fromSql (row!!6)::Maybe String,
+             activo = fromSql (row!!9)::Bool }
+
+fromType :: Efectivo -> [SqlValue]
+fromType e =
+  [toSql $ nombre e,
+    toSql $ beneficiario e,
+    toSql $ emailNotificacion e,
+    toSql $ activo e,
+    toSql $ toString (guidCuenta e),
+    toSql $ idCuenta e]
 
 selOneCmd :: Int -> Command
 selOneCmd key =
@@ -39,7 +56,7 @@ deleteCmd key =
 getOne :: Int -> IO (Maybe Efectivo)
 getOne key = do
   let cmd = selOneCmd key
-  BaseDb.rowToType cmd toType
+  rowToType cmd toType
 
 save :: (Maybe Efectivo) -> IO Integer
 save Nothing  = return 0

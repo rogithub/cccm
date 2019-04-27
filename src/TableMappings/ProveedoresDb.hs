@@ -12,9 +12,33 @@ import Database.HDBC
 import DataAccess.Commands
 import TableMappings.Types.Proveedor
 import TableMappings.Types.PageResult
-import TableMappings.BaseDb as BaseDb
+import TableMappings.BaseDb
 import Data.UUID
-import TableMappings.Types.DbRow
+
+toType :: [SqlValue] -> Proveedor
+toType r =
+  Proveedor { idProveedor = fromSql (r!!0)::Int,
+              guidProveedor = read (fromSql (r!!1)::String),
+              empresa = fromSql (r!!2)::String,
+              contacto = fromSql (r!!3)::String,
+              domicilio = fromSql (r!!4)::Maybe String,
+              telefono = fromSql (r!!5)::String,
+              email = fromSql (r!!6)::String,
+              comentarios = fromSql (r!!7)::Maybe String,
+              activo = fromSql (r!!8)::Bool }
+
+fromType :: Proveedor -> [SqlValue]
+fromType p =
+  [toSql $ empresa p,
+   toSql $ contacto p,
+   toSql $ domicilio p,
+   toSql $ telefono p,
+   toSql $ email  p,
+   toSql $ comentarios p,
+   toSql $ activo p,
+   toSql $ toString (guidProveedor p),
+   toSql $ idProveedor p]
+
 
 getByNameCmd :: String -> Command
 getByNameCmd name =
@@ -43,17 +67,17 @@ deleteCmd key =
 getByName :: String -> IO [Proveedor]
 getByName name = do
   let cmd = getByNameCmd name
-  BaseDb.rowsToType cmd toType
+  rowsToType cmd toType
 
 getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
 getAll offset pageSize name = do
   let cmd = selCmd offset pageSize name
-  BaseDb.getPageResult cmd toType
+  getPageResult cmd toType
 
 getOne :: Int -> IO (Maybe Proveedor)
 getOne key = do
   let cmd = selOneCmd key
-  BaseDb.rowToType cmd toType
+  rowToType cmd toType
 
 save :: (Maybe Proveedor) -> IO Integer
 save Nothing  = return 0

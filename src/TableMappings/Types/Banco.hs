@@ -7,7 +7,6 @@ module TableMappings.Types.Banco
 import Data.Aeson
 import GHC.Generics
 import Data.UUID
-import TableMappings.Types.DbRow
 import Database.HDBC
 
 data Banco = Banco { idCuenta :: Int
@@ -24,24 +23,3 @@ instance ToJSON Banco where
 instance FromJSON Banco
 
 
-instance ToType Banco where
-  toType row =
-    Banco { idCuenta = fromSql (row!!0)::Int,
-            guidCuenta = read (fromSql (row!!1)::String),
-            banco = fromSql (row!!2)::String,
-            clabe = fromSql (row!!3)::Maybe String,
-            nocuenta = fromSql (row!!4)::Maybe String,
-            beneficiario = fromSql (row!!5)::String,
-            emailNotificacion = fromSql (row!!6)::Maybe String,
-            activo = fromSql (row!!9)::Bool }
-
-instance FromType Banco where
-  fromType p =
-    [toSql $ banco p,
-     toSql $ clabe p,
-     toSql $ nocuenta p,
-     toSql $ beneficiario p,
-     toSql $ emailNotificacion p,
-     toSql $ activo p,
-     toSql $ toString (guidCuenta p),
-     toSql $ idCuenta p]
