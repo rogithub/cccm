@@ -18,21 +18,24 @@ module TableMappings.MaterialesDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.Entities
 import DataAccess.PageResult
 import TableMappings.Types.Material
 import Data.UUID
 
-toType :: [SqlValue] -> Material
-toType r =
-  Material { idMaterial = fromSql (r!!0)::Int,
-             guidMaterial = read (fromSql (r!!1)::String),
-             nombre = fromSql (r!!2)::String,
-             color = fromSql (r!!3)::String,
-             unidad = fromSql (r!!4)::String,
-             marca = fromSql (r!!5)::Maybe String,
-             modelo = fromSql (r!!6)::Maybe String,
-             comentarios = fromSql (r!!7)::Maybe String,
-             activo = fromSql (r!!8)::Bool }
+instance ToType Material where
+  toType r =
+    Material { idMaterial = fromSql (r!!0)::Int,
+               guidMaterial = read (fromSql (r!!1)::String),
+               nombre = fromSql (r!!2)::String,
+               color = fromSql (r!!3)::String,
+               unidad = fromSql (r!!4)::String,
+               marca = fromSql (r!!5)::Maybe String,
+               modelo = fromSql (r!!6)::Maybe String,
+               comentarios = fromSql (r!!7)::Maybe String,
+               activo = fromSql (r!!8)::Bool }
+
+
 
 fromType :: Material -> [SqlValue]
 fromType t =
@@ -83,25 +86,23 @@ deleteCmd key =
 getByName :: String -> IO [Material]
 getByName name = do
   let cmd = getByNameCmd name
-  rowsToType cmd toType
+  selectMany cmd
 
 getAll :: Int -> Int -> String -> IO (PageResult Material)
 getAll offset pageSize name = do
   let cmd = selCmd offset pageSize name
-  getPageResult cmd toType
+  getPages cmd
 
 getOne :: Int -> IO (Maybe Material)
 getOne key = do
   let cmd = selOneCmd key
-  rowToType cmd toType
+  selectOne cmd
 
 save :: (Maybe Material) -> IO Integer
-save Nothing  = return 0
-save (Just p) = execNonSelQuery (savCmd p)
+save = persist savCmd 
 
 update :: (Maybe Material) -> IO Integer
-update Nothing  = return 0
-update (Just p) = execNonSelQuery (updateCmd p)
+update = persist updateCmd
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)

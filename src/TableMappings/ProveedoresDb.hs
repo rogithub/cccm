@@ -18,20 +18,21 @@ module TableMappings.ProveedoresDb
 import Database.HDBC
 import DataAccess.Commands
 import DataAccess.PageResult
+import DataAccess.Entities
 import TableMappings.Types.Proveedor
 import Data.UUID
 
-toType :: [SqlValue] -> Proveedor
-toType r =
-  Proveedor { idProveedor = fromSql (r!!0)::Int,
-              guidProveedor = read (fromSql (r!!1)::String),
-              empresa = fromSql (r!!2)::String,
-              contacto = fromSql (r!!3)::String,
-              domicilio = fromSql (r!!4)::Maybe String,
-              telefono = fromSql (r!!5)::String,
-              email = fromSql (r!!6)::String,
-              comentarios = fromSql (r!!7)::Maybe String,
-              activo = fromSql (r!!8)::Bool }
+instance ToType Proveedor where
+  toType r =
+    Proveedor { idProveedor = fromSql (r!!0)::Int,
+                guidProveedor = read (fromSql (r!!1)::String),
+                empresa = fromSql (r!!2)::String,
+                contacto = fromSql (r!!3)::String,
+                domicilio = fromSql (r!!4)::Maybe String,
+                telefono = fromSql (r!!5)::String,
+                email = fromSql (r!!6)::String,
+                comentarios = fromSql (r!!7)::Maybe String,
+                activo = fromSql (r!!8)::Bool }
 
 fromType :: Proveedor -> [SqlValue]
 fromType p =
@@ -73,25 +74,23 @@ deleteCmd key =
 getByName :: String -> IO [Proveedor]
 getByName name = do
   let cmd = getByNameCmd name
-  rowsToType cmd toType
+  selectMany cmd
 
 getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
 getAll offset pageSize name = do
   let cmd = selCmd offset pageSize name
-  getPageResult cmd toType
+  getPages cmd
 
 getOne :: Int -> IO (Maybe Proveedor)
 getOne key = do
   let cmd = selOneCmd key
-  rowToType cmd toType
+  selectOne cmd
 
 save :: (Maybe Proveedor) -> IO Integer
-save Nothing  = return 0
-save (Just p) = execNonSelQuery (savCmd p)
+save = persist savCmd
 
 update :: (Maybe Proveedor) -> IO Integer
-update Nothing  = return 0
-update (Just p) = execNonSelQuery (updateCmd p)
+update = persist updateCmd
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)

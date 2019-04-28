@@ -9,17 +9,18 @@ module TableMappings.ComprasServiciosDb
 import Database.HDBC
 import DataAccess.Commands
 import DataAccess.PageResult
+import DataAccess.Entities
 import TableMappings.Types.CompraServicio
 import Data.UUID
 
-toType :: [SqlValue] -> CompraServicio
-toType row =
-  CompraServicio { idCompraServicio = fromSql (row!!0) :: Int,
-                   guidCompraServicio = read (fromSql (row!!1) :: String),
-                   compraId = read (fromSql (row!!2) :: String),
-                   descripcion = fromSql (row!!3) :: String,
-                   cantidad = fromSql (row!!4) :: Double,
-                   precio = fromSql (row!!5) :: Double }
+instance ToType CompraServicio where
+  toType row =
+    CompraServicio { idCompraServicio = fromSql (row!!0) :: Int,
+                     guidCompraServicio = read (fromSql (row!!1) :: String),
+                     compraId = read (fromSql (row!!2) :: String),
+                     descripcion = fromSql (row!!3) :: String,
+                     cantidad = fromSql (row!!4) :: Double,
+                     precio = fromSql (row!!5) :: Double }
 
 fromType :: CompraServicio -> [SqlValue]
 fromType c =
@@ -50,15 +51,13 @@ deleteCmd key =
 getOne :: Int -> IO (Maybe CompraServicio)
 getOne key = do
   let cmd = selOneCmd key
-  rowToType cmd toType
+  selectOne cmd
 
 save :: (Maybe CompraServicio) -> IO Integer
-save Nothing = return 0
-save (Just c) = execNonSelQuery (savCmd c)
+save = persist savCmd 
 
 update :: (Maybe CompraServicio) -> IO Integer
-update Nothing = return 0
-update (Just c) = execNonSelQuery (updateCmd c)
+update = persist updateCmd
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)

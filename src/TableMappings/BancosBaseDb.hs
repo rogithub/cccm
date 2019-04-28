@@ -15,20 +15,21 @@ module TableMappings.BancosBaseDb
 
 import Database.HDBC
 import DataAccess.Commands
+import DataAccess.Entities
 import TableMappings.Types.Banco
 import DataAccess.PageResult
 import Data.UUID
 
-toType :: [SqlValue] -> Banco
-toType row =
-  Banco { idCuenta = fromSql (row!!0)::Int,
-          guidCuenta = read (fromSql (row!!1)::String),
-          banco = fromSql (row!!2)::String,
-          clabe = fromSql (row!!3)::Maybe String,
-          nocuenta = fromSql (row!!4)::Maybe String,
-          beneficiario = fromSql (row!!5)::String,
-          emailNotificacion = fromSql (row!!6)::Maybe String,
-          activo = fromSql (row!!9)::Bool }
+instance ToType Banco where
+  toType row =
+    Banco { idCuenta = fromSql (row!!0)::Int,
+            guidCuenta = read (fromSql (row!!1)::String),
+            banco = fromSql (row!!2)::String,
+            clabe = fromSql (row!!3)::Maybe String,
+            nocuenta = fromSql (row!!4)::Maybe String,
+            beneficiario = fromSql (row!!5)::String,
+            emailNotificacion = fromSql (row!!6)::Maybe String,
+            activo = fromSql (row!!9)::Bool }
 
 fromType :: Banco -> [SqlValue]
 fromType p =
@@ -65,15 +66,13 @@ deleteCmd key =
 getOne :: Int -> IO (Maybe Banco)
 getOne key = do
   let cmd = selOneCmd key
-  rowToType cmd toType
+  selectOne cmd
 
 save :: (Maybe Banco) -> IO Integer
-save Nothing  = return 0
-save (Just b) = execNonSelQuery (savCmd b)
+save = persist savCmd
 
 update :: (Maybe Banco) -> IO Integer
-update Nothing  = return 0
-update (Just b) = execNonSelQuery (updateCmd b)
+update = persist updateCmd
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)

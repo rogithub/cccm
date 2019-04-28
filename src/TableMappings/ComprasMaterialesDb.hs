@@ -16,17 +16,18 @@ module TableMappings.ComprasMaterialesDb
 import Database.HDBC
 import DataAccess.Commands
 import DataAccess.PageResult
+import DataAccess.Entities
 import TableMappings.Types.CompraMaterial
 import Data.UUID
 
-toType :: [SqlValue] -> CompraMaterial 
-toType row =
-  CompraMaterial { idCompraMaterial = fromSql (row!!0) :: Int,
-                   guidCompraMaterial = read (fromSql (row!!1) :: String),
-                   compraId = read (fromSql (row!!2) :: String),
-                   materialId = read (fromSql (row!!3) :: String),
-                   cantidad = fromSql (row!!4) :: Double,
-                   precio = fromSql (row!!5) :: Double }
+instance ToType CompraMaterial where 
+  toType row =
+    CompraMaterial { idCompraMaterial = fromSql (row!!0) :: Int,
+                     guidCompraMaterial = read (fromSql (row!!1) :: String),
+                     compraId = read (fromSql (row!!2) :: String),
+                     materialId = read (fromSql (row!!3) :: String),
+                     cantidad = fromSql (row!!4) :: Double,
+                     precio = fromSql (row!!5) :: Double }
 
 fromType :: CompraMaterial -> [SqlValue]
 fromType m =
@@ -57,15 +58,13 @@ deleteCmd key =
 getOne :: Int -> IO (Maybe CompraMaterial)
 getOne key = do
   let cmd = selOneCmd key
-  rowToType cmd toType
+  selectOne cmd
 
 save :: (Maybe CompraMaterial) -> IO Integer
-save Nothing = return 0
-save (Just c) = execNonSelQuery (savCmd c)
+save = persist savCmd 
 
 update :: (Maybe CompraMaterial) -> IO Integer
-update Nothing = return 0
-update (Just c) = execNonSelQuery (updateCmd c)
+update = persist updateCmd
 
 delete :: Int -> IO Integer
 delete key = execNonSelQuery (deleteCmd key)

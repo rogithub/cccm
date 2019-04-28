@@ -9,8 +9,9 @@ module TableMappings.BancosClienteDb
 
 import Database.HDBC
 import DataAccess.Commands
-import TableMappings.Types.Banco
 import DataAccess.PageResult
+import DataAccess.Entities
+import TableMappings.Types.Banco
 import TableMappings.BancosBaseDb as BancosBaseDb
 
 selCmd :: Int -> Command
@@ -23,4 +24,4 @@ selCmd clienteId =
 getAll :: Int -> IO [Banco]
 getAll clienteId = do
   let cmd = selCmd clienteId
-  rowsToType cmd toType
+  selectMany cmd
