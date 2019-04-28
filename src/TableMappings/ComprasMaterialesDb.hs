@@ -56,9 +56,7 @@ deleteCmd key =
   Command "DELETE from comprasmateriales where id=?" [toSql False, toSql key]
 
 getOne :: Int -> IO (Maybe CompraMaterial)
-getOne key = do
-  let cmd = selOneCmd key
-  selectOne cmd
+getOne = selectOne . selOneCmd
 
 save :: (Maybe CompraMaterial) -> IO Integer
 save = persist savCmd 
@@ -67,4 +65,4 @@ update :: (Maybe CompraMaterial) -> IO Integer
 update = persist updateCmd
 
 delete :: Int -> IO Integer
-delete key = execNonSelQuery (deleteCmd key)
+delete = execNonSelQuery . deleteCmd

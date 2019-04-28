@@ -22,6 +22,5 @@ selCmd proveedorId =
   \ activo = ? and p.proveedorId = ?;" [toSql True, toSql proveedorId]
 
 getAll :: Int -> IO [Banco]
-getAll proveedorId = do
-  let cmd = selCmd proveedorId
-  selectMany cmd
+getAll = selectMany . selCmd
+

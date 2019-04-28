@@ -60,9 +60,7 @@ deleteCmd key =
   Command "UPDATE cuentas SET activo=? where id=?" [toSql False, toSql key]
 
 getOne :: Int -> IO (Maybe Efectivo)
-getOne key = do
-  let cmd = selOneCmd key
-  selectOne cmd
+getOne = selectOne . selOneCmd
 
 save :: (Maybe Efectivo) -> IO Integer
 save = persist savCmd
@@ -71,4 +69,4 @@ update :: (Maybe Efectivo) -> IO Integer
 update = persist updateCmd
 
 delete :: Int -> IO Integer
-delete key = execNonSelQuery (deleteCmd key)
+delete = execNonSelQuery . deleteCmd

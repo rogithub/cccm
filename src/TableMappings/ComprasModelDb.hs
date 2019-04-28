@@ -6,6 +6,7 @@ module TableMappings.ComprasModelDb
 import Database.HDBC
 import DataAccess.Commands
 import DataAccess.PageResult
+import DataAccess.Entities
 import TableMappings.Models.Compra
 import Data.UUID
 import Data.Time.Calendar
@@ -27,5 +28,4 @@ savCmd c =
   Command "INSERT INTO compras (proveedorid, fecha, docidfacturapdf, docidfacturaxml, ivaporcien, activo, guid) values (?,?,?,?,?,?,?)" (init $ fromType c)
 
 save :: (Maybe Compra) -> IO Integer
-save Nothing = return 0
-save (Just c) = execNonSelQuery (savCmd c)
+save = persist savCmd

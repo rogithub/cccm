@@ -72,19 +72,13 @@ deleteCmd key =
   Command "UPDATE proveedores SET activo=? where id=?" [toSql False, toSql key]
 
 getByName :: String -> IO [Proveedor]
-getByName name = do
-  let cmd = getByNameCmd name
-  selectMany cmd
+getByName = selectMany . getByNameCmd
 
 getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
-getAll offset pageSize name = do
-  let cmd = selCmd offset pageSize name
-  getPages cmd
+getAll offset pageSize name = getPages $ selCmd offset pageSize name
 
 getOne :: Int -> IO (Maybe Proveedor)
-getOne key = do
-  let cmd = selOneCmd key
-  selectOne cmd
+getOne = selectOne . selOneCmd
 
 save :: (Maybe Proveedor) -> IO Integer
 save = persist savCmd
@@ -93,4 +87,4 @@ update :: (Maybe Proveedor) -> IO Integer
 update = persist updateCmd
 
 delete :: Int -> IO Integer
-delete key = execNonSelQuery (deleteCmd key)
+delete = execNonSelQuery . deleteCmd

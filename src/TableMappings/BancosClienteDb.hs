@@ -22,6 +22,4 @@ selCmd clienteId =
   \ activo = ? and cc.clienteId = ?;" [toSql True, toSql clienteId]
 
 getAll :: Int -> IO [Banco]
-getAll clienteId = do
-  let cmd = selCmd clienteId
-  selectMany cmd
+getAll = selectMany . selCmd
