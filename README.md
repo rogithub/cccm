@@ -11,7 +11,7 @@ $ CONN_STR="host=localhost dbname=cc user=postgres" stack --no-nix-pure exec ccc
 http://localhost:8000
 ```
 
-## docker buld
+## docker build
 ```
 $ make
 ```
