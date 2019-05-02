@@ -11,7 +11,8 @@ import TableMappings.Models.CompraMaterialModel
 import Data.UUID
 
 data CompraModel = CompraModel { compra :: Compra
-                               , materiales :: [CompraMaterialModel]
+                               , materialesNuevo :: [CompraMaterialModel]
+                               , materialesExistente :: [CompraMaterialModel]
                                , servicios  :: [CompraServicio]
                                } deriving (Generic, Show)
 
