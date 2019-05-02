@@ -6,7 +6,7 @@ module Controllers.Compras
 
 import Data.Aeson
 import Controllers.Helper
-import TableMappings.Models.Compra
+import TableMappings.Models.CompraModel
 import TableMappings.ComprasModelDb as Db
 
 import Happstack.Server           (Response, ServerPart, method, look,
@@ -20,7 +20,7 @@ post = do
   req  <- askRq
   body <- liftIO $ peekRequestBody req  
   let compra = case body of
-        Just rqbody -> decode (unBody rqbody) :: Maybe Compra
+        Just rqbody -> decode (unBody rqbody) :: Maybe CompraModel
         Nothing     -> Nothing
   logReq ("[POST] compras/" ++ (show body))
   okJSON (Db.save compra)
