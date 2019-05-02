@@ -8,20 +8,16 @@ import Data.Aeson
 import GHC.Generics
 import Data.Time.Calendar
 import TableMappings.Types.Material
+import TableMappings.Types.CompraMaterial
+
 import Data.UUID
 
 data CompraMaterialModel =
-  MaterialNuevo { material :: Material
-                , cantidad :: Double
-                , precio :: Double
-                }
-  | MaterialExistente { materialId :: UUID
-                      , cantidad :: Double
-                      , precio :: Double }
-                     deriving (Generic, Show)
-
+  CompraMaterialModel { material :: Material
+                      , compraMaterial :: CompraMaterial
+                      } deriving (Generic, Show)
 
 instance ToJSON CompraMaterialModel where
   toEncoding = genericToEncoding defaultOptions
-
+  
 instance FromJSON CompraMaterialModel
