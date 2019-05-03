@@ -1,5 +1,10 @@
 module TableMappings.ComprasServiciosDb
 (
+  selOneCmd,
+  savCmd,
+  updateCmd,
+  deleteCmd,
+  
   getOne,
   save,
   update,
