@@ -29,5 +29,4 @@ savCmd m =
 
 
 save :: (Maybe CompraModel) -> IO Integer
-save Nothing = return 0
-save (Just c) = return 1
+save = persist TableMappings.ComprasModelDb.savCmd
