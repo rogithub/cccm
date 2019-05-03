@@ -21,13 +21,14 @@ import DataAccess.PageResult
 import TableMappings.Types.Compra
 import Data.UUID
 import Data.Time.Calendar
+import Data.Aeson
 
 instance ToType Compra where
   toType r =
     Compra { idCompra = fromSql (r!!0)::Int,
              guidCompra = read (fromSql (r!!1)::String),
              proveedorId = read (fromSql (r!!2)::String),
-             fecha = fromSql (r!!3)::Day,
+             fecha = read (fromSql (r!!3)::String),
              docIdFacturaPdf = read (fromSql (r!!4)::String),
              docIdFacturaXml = read (fromSql (r!!5)::String),
              iva = fromSql (r!!6)::Double,
@@ -36,7 +37,7 @@ instance ToType Compra where
 fromType :: Compra -> [SqlValue]
 fromType t =
   [toSql $ toString (proveedorId t),
-   toSql $ fecha t,
+   toSql $ show (fecha t),
    toSql $ "", --docIdFacturaPdf t
    toSql $ "", --docIdFacturaXml t
    toSql $ iva t,

@@ -10,7 +10,7 @@ import Data.UUID
 data Compra = Compra { idCompra :: Int
                , guidCompra :: UUID 
                , proveedorId :: UUID 
-               , fecha :: Day
+               , fecha :: DotNetTime
                , docIdFacturaPdf :: Maybe UUID
                , docIdFacturaXml :: Maybe UUID
                , iva :: Double
