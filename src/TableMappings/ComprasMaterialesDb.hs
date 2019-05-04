@@ -4,11 +4,16 @@ module TableMappings.ComprasMaterialesDb
   save,
   update,
   delete,
+
+  selOneSql,
+  savSql,
+  updSql,
+  delSql,
   
   selOneCmd,
   savCmd,
-  updateCmd,
-  deleteCmd
+  updCmd,
+  delCmd
 ) where
 
 import Database.HDBC
@@ -36,21 +41,33 @@ instance FromType CompraMaterial where
       toSql $ toString (guidCompraMaterial m),
       toSql $ idCompraMaterial m ]
 
+selOneSql :: SqlString
+selOneSql = "SELECT * FROM comprasmateriales where id = ?"
+
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM comprasmateriales where id = ?" [toSql key]
+  Command selOneSql [toSql key]
+
+savSql :: SqlString
+savSql = "INSERT INTO comprasmateriales (compraid, materialid, cantidad, precio, guid) values (?,?,?,?,?)"
 
 savCmd :: CompraMaterial -> Command
 savCmd c =
-  Command "INSERT INTO comprasmateriales (compraid, materialid, cantidad, precio, guid) values (?,?,?,?,?)" (init $ fromType c)
+  Command savSql (init $ fromType c)
 
-updateCmd :: CompraMaterial -> Command
-updateCmd c =
-  Command "UPDATE comprasmateriales SET compraid=?, materialid=?, cantidad=?, precio=? where guid=? and id=?" (fromType c)
+updSql :: SqlString
+updSql = "UPDATE comprasmateriales SET compraid=?, materialid=?, cantidad=?, precio=? where guid=? and id=?"
 
-deleteCmd :: Int -> Command
-deleteCmd key =
-  Command "DELETE from comprasmateriales where id=?" [toSql False, toSql key]
+updCmd :: CompraMaterial -> Command
+updCmd c =
+  Command updSql (fromType c)
+
+delSql :: SqlString
+delSql = "DELETE from comprasmateriales where id=?"
+
+delCmd :: Int -> Command
+delCmd key =
+  Command delSql [toSql False, toSql key]
 
 getOne :: Int -> IO (Maybe CompraMaterial)
 getOne = selectOne . selOneCmd
@@ -59,7 +76,7 @@ save :: (Maybe CompraMaterial) -> IO Integer
 save = persist savCmd 
 
 update :: (Maybe CompraMaterial) -> IO Integer
-update = persist updateCmd
+update = persist updCmd
 
 delete :: Int -> IO Integer
-delete = execNonSelQuery . deleteCmd
+delete = execNonSelQuery . delCmd

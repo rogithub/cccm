@@ -1,6 +1,7 @@
 module DataAccess.Commands
 (
   Command(..)
+  , SqlString
   , execSelQuery
   , execNonSelQuery
   , execManySql
@@ -10,7 +11,9 @@ import Database.HDBC
 import Database.HDBC.PostgreSQL
 import DataAccess.Db
 
-data Command = Command String [SqlValue] deriving (Show)
+type SqlString = String
+
+data Command = Command SqlString [SqlValue] deriving (Show)
 
 execSelQuery :: Command -> IO [[SqlValue]]
 execSelQuery (Command sql params) =

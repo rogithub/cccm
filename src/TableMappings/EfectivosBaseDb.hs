@@ -5,10 +5,15 @@ module TableMappings.EfectivosBaseDb
   update,
   delete,
 
+  selOneSql,
+  savSql,
+  updSql,
+  delSql,
+  
   selOneCmd,
   savCmd,
-  updateCmd,
-  deleteCmd
+  updCmd,
+  delCmd
   
 ) where
 
@@ -36,26 +41,38 @@ instance FromType Efectivo where
      toSql $ activo e,
      toSql $ toString (guidCuenta e),
      toSql $ idCuenta e]
-  
+
+selOneSql :: SqlString
+selOneSql = "SELECT * FROM cuentas where id = ?"
+
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM cuentas where id = ?" [toSql key]
+  Command selOneSql [toSql key]
 
+savSql :: SqlString
+savSql = "INSERT INTO cuentas \
+  \ (banco, clabe, nocuenta, nombre, beneficiario, emailnotificacion, efectivo, activo, guid) \
+  \ values ('','','',?,?,?,true,?,?)"
+  
 savCmd :: Efectivo -> Command
 savCmd b =
-  Command "INSERT INTO cuentas \
-  \ (banco, clabe, nocuenta, nombre, beneficiario, emailnotificacion, efectivo, activo, guid) \
-  \ values ('','','',?,?,?,true,?,?)" (init $ fromType b)
+  Command savSql (init $ fromType b)
 
-updateCmd :: Efectivo -> Command
-updateCmd b =
-  Command "UPDATE cuentas SET \
+updSql :: SqlString
+updSql = "UPDATE cuentas SET \
   \ nombre=?, beneficiario=?, emailnotificacion=?, activo=? \
-  \ where guid=? and id=?" (fromType b)
+  \ where guid=? and id=?"
+  
+updCmd :: Efectivo -> Command
+updCmd b =
+  Command updSql (fromType b)
 
-deleteCmd :: Int -> Command
-deleteCmd key =
-  Command "UPDATE cuentas SET activo=? where id=?" [toSql False, toSql key]
+delSql :: SqlString
+delSql = "UPDATE cuentas SET activo=? where id=?"
+
+delCmd :: Int -> Command
+delCmd key =
+  Command delSql [toSql False, toSql key]
 
 getOne :: Int -> IO (Maybe Efectivo)
 getOne = selectOne . selOneCmd
@@ -64,7 +81,7 @@ save :: (Maybe Efectivo) -> IO Integer
 save = persist savCmd
 
 update :: (Maybe Efectivo) -> IO Integer
-update = persist updateCmd
+update = persist updCmd
 
 delete :: Int -> IO Integer
-delete = execNonSelQuery . deleteCmd
+delete = execNonSelQuery . delCmd

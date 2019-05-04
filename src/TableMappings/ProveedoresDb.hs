@@ -9,8 +9,18 @@ module TableMappings.ProveedoresDb
 
   selOneCmd,
   savCmd,
-  updateCmd,
-  deleteCmd
+  updCmd,
+  delCmd,
+  selByNameCmd,
+  selPagCmd,
+
+  selByNameSql,
+  selPagSql,
+  selOneSql,
+  updSql,
+  savSql,
+  delSql
+  
 ) where
 
 import Database.HDBC
@@ -44,35 +54,54 @@ instance FromType Proveedor where
      toSql $ toString (guidProveedor p),
      toSql $ idProveedor p]
 
-getByNameCmd :: String -> Command
-getByNameCmd name =
-  Command "SELECT * FROM proveedores where empresa like ? and activo = ?  ORDER BY empresa" [toSql name, toSql True]
 
-selCmd :: Int -> Int -> String -> Command
-selCmd offset pageSize name =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores WHERE activo = ? and empresa ~* ? ORDER BY empresa OFFSET ? FETCH NEXT ? ROWS ONLY" [toSql True, toSql name, toSql offset, toSql pageSize]
+selByNameSql :: SqlString
+selByNameSql = "SELECT * FROM proveedores where empresa like ? and activo = ?  ORDER BY empresa"
 
+selByNameCmd :: String -> Command
+selByNameCmd name =
+  Command selByNameSql [toSql name, toSql True]
+
+selPagSql :: SqlString
+selPagSql = "SELECT *, count(*) OVER() as TOTAL_ROWS FROM proveedores WHERE activo = ? and empresa ~* ? ORDER BY empresa OFFSET ? FETCH NEXT ? ROWS ONLY"
+
+selPagCmd :: Int -> Int -> String -> Command
+selPagCmd offset pageSize name =
+  Command selPagSql [toSql True, toSql name, toSql offset, toSql pageSize]
+
+selOneSql :: SqlString
+selOneSql = "SELECT * FROM proveedores where id = ?"
+  
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM proveedores where id = ?" [toSql key]
+  Command selOneSql [toSql key]
+
+savSql :: SqlString
+savSql = "INSERT INTO proveedores (empresa, contacto, domicilio, telefono, email, comentarios, activo, guid) values (?,?,?,?,?,?,?,?)"
 
 savCmd :: Proveedor -> Command
 savCmd p =
-  Command "INSERT INTO proveedores (empresa, contacto, domicilio, telefono, email, comentarios, activo, guid) values (?,?,?,?,?,?,?,?)" (init $ fromType p)
+  Command savSql (init $ fromType p)
 
-updateCmd :: Proveedor -> Command
-updateCmd p =
-  Command "UPDATE proveedores SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where guid=? and id=?" (fromType p)
+updSql :: SqlString
+updSql = "UPDATE proveedores SET empresa=?, contacto=?, domicilio=?, telefono=?, email=?, comentarios=?, activo=? where guid=? and id=?"
 
-deleteCmd :: Int -> Command
-deleteCmd key =
-  Command "UPDATE proveedores SET activo=? where id=?" [toSql False, toSql key]
+updCmd :: Proveedor -> Command
+updCmd p =
+  Command updSql (fromType p)
+
+delSql :: SqlString
+delSql = "UPDATE proveedores SET activo=? where id=?"
+
+delCmd :: Int -> Command
+delCmd key =
+  Command delSql [toSql False, toSql key]
 
 getByName :: String -> IO [Proveedor]
-getByName = selectMany . getByNameCmd
+getByName = selectMany . selByNameCmd
 
 getAll :: Int -> Int -> String -> IO (PageResult Proveedor)
-getAll offset pageSize name = getPages $ selCmd offset pageSize name
+getAll offset pageSize name = getPages $ selPagCmd offset pageSize name
 
 getOne :: Int -> IO (Maybe Proveedor)
 getOne = selectOne . selOneCmd
@@ -81,7 +110,7 @@ save :: (Maybe Proveedor) -> IO Integer
 save = persist savCmd
 
 update :: (Maybe Proveedor) -> IO Integer
-update = persist updateCmd
+update = persist updCmd
 
 delete :: Int -> IO Integer
-delete = execNonSelQuery . deleteCmd
+delete = execNonSelQuery . delCmd

@@ -5,10 +5,15 @@ module TableMappings.ComprasDb
   update,
   delete,
 
+  selOneSql,
+  savSql,
+  updSql,
+  delSql,
+  
   selOneCmd,
   savCmd,
-  updateCmd,
-  deleteCmd
+  updCmd,
+  delCmd
   
 ) where
 
@@ -44,25 +49,37 @@ instance FromType Compra where
      toSql $ idCompra t]
 
 
+selOneSql :: SqlString
+selOneSql = "SELECT * FROM compras where id = ?"
+
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM compras where id = ?" [toSql key]
+  Command selOneSql [toSql key]
 
+savSql :: SqlString
+savSql = "INSERT INTO compras \
+  \ (proveedorId, fecha, docidfacturapdf, docidfacturaxml, ivaporcien, activo, guid)\
+  \ values (?,?,?,?,?,?,?)"
+  
 savCmd :: Compra -> Command
 savCmd p =
-  Command "INSERT INTO compras \
-  \ (proveedorId, fecha, docidfacturapdf, docidfacturaxml, ivaporcien, activo, guid)\
-  \ values (?,?,?,?,?,?,?)" (init $ fromType p)
+  Command savSql (init $ fromType p)
 
-updateCmd :: Compra -> Command
-updateCmd p =
-  Command "UPDATE compras SET \
+updSql :: SqlString
+updSql = "UPDATE compras SET \
   \ proveedorId=?, fecha=?, docidfacturapdf=?, docidfacturaxml=?, ivaporcien=?, activo=?\
-  \ where guid=? and id=?" (fromType p)
+  \ where guid=? and id=?"
+  
+updCmd :: Compra -> Command
+updCmd p =
+  Command updSql (fromType p)
 
-deleteCmd :: Int -> Command
-deleteCmd key =
-  Command "UPDATE compras SET activo=? where id=?" [toSql False, toSql key]
+delSql :: SqlString
+delSql = "UPDATE compras SET activo=? where id=?"
+
+delCmd :: Int -> Command
+delCmd key =
+  Command delSql [toSql False, toSql key]
 
 getOne :: Int -> IO (Maybe Compra)
 getOne = selectOne . selOneCmd
@@ -71,7 +88,7 @@ save :: (Maybe Compra) -> IO Integer
 save = persist savCmd 
 
 update :: (Maybe Compra) -> IO Integer
-update = persist updateCmd
+update = persist updCmd
 
 delete :: Int -> IO Integer
-delete = execNonSelQuery . deleteCmd
+delete = execNonSelQuery . delCmd

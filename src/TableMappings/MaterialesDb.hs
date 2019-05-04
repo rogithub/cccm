@@ -1,5 +1,12 @@
 module TableMappings.MaterialesDb
 (
+  selByNameSql,
+  selPagSql,
+  selOneSql,
+  updSql,
+  savSql,
+  delSql,
+  
   getAll,
   getOne,
   save,
@@ -7,12 +14,13 @@ module TableMappings.MaterialesDb
   delete,
   getByName,
 
-  toType,
-  fromType,
+
+  selByNameCmd,
+  selPagCmd,
   selOneCmd,
   savCmd,
-  updateCmd,
-  deleteCmd
+  updCmd,
+  delCmd
   
 ) where
 
@@ -49,44 +57,61 @@ instance FromType Material where
      toSql $ toString (guidMaterial t),
      toSql $ idMaterial t]
 
-getByNameCmd :: String -> Command
-getByNameCmd name =
-  Command "SELECT * FROM materiales where nombre like ? and activo = ? \
-  \ORDER BY nombre" [toSql name, toSql True]
 
-selCmd :: Int -> Int -> String -> Command
-selCmd offset pageSize name =
-  Command "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales \
+selByNameSql :: SqlString
+selByNameSql = "SELECT * FROM materiales where nombre like ? and activo = ? \
+  \ORDER BY nombre"
+
+selByNameCmd :: String -> Command
+selByNameCmd name = Command selByNameSql [toSql name, toSql True]
+
+selPagSql :: SqlString
+selPagSql = "SELECT *, count(*) OVER() as TOTAL_ROWS FROM materiales \
   \ WHERE activo=? AND \
   \ concat_ws(' ', nombre, color, unidad, marca, modelo) ~* ? \
   \ ORDER BY nombre OFFSET ? FETCH NEXT ? ROWS ONLY"
-  [toSql True, toSql name, toSql offset, toSql pageSize]
+  
+selPagCmd :: Int -> Int -> String -> Command
+selPagCmd offset pageSize name =
+  Command selPagSql [toSql True, toSql name, toSql offset, toSql pageSize]
+
+selOneSql :: SqlString
+selOneSql = "SELECT * FROM materiales where id = ?"
 
 selOneCmd :: Int -> Command
 selOneCmd key =
-  Command "SELECT * FROM materiales where id = ?" [toSql key]
+  Command selOneSql [toSql key]
 
+savSql :: SqlString
+savSql = "INSERT INTO materiales \
+  \ (nombre, color, unidad, marca, modelo, comentarios, activo, guid)\
+  \ values (?,?,?,?,?,?,?,?)"
+  
 savCmd :: Material -> Command
 savCmd p =
-  Command "INSERT INTO materiales \
-  \ (nombre, color, unidad, marca, modelo, comentarios, activo, guid)\
-  \ values (?,?,?,?,?,?,?,?)" (init $ fromType p)
+  Command savSql (init $ fromType p)
 
-updateCmd :: Material -> Command
-updateCmd p =
-  Command "UPDATE materiales SET \
+updSql :: SqlString
+updSql = "UPDATE materiales SET \
   \ nombre=?, color=?, unidad=?, marca=?, modelo=?, comentarios=?, activo=?\
-  \ where guid=? and id=?" (fromType p)
+  \ where guid=? and id=?"
 
-deleteCmd :: Int -> Command
-deleteCmd key =
-  Command "UPDATE materiales SET activo=? where id=?" [toSql False, toSql key]
+updCmd :: Material -> Command
+updCmd p =
+  Command updSql (fromType p)
+
+delSql :: SqlString
+delSql = "UPDATE materiales SET activo=? where id=?"
+  
+delCmd :: Int -> Command
+delCmd key =
+  Command delSql [toSql False, toSql key]
 
 getByName :: String -> IO [Material]
-getByName = selectMany . getByNameCmd
+getByName = selectMany . selByNameCmd
 
 getAll :: Int -> Int -> String -> IO (PageResult Material)
-getAll offset pageSize name = getPages $ selCmd offset pageSize name
+getAll offset pageSize name = getPages $ selPagCmd offset pageSize name
 
 getOne :: Int -> IO (Maybe Material)
 getOne = selectOne . selOneCmd
@@ -95,7 +120,7 @@ save :: (Maybe Material) -> IO Integer
 save = persist savCmd 
 
 update :: (Maybe Material) -> IO Integer
-update = persist updateCmd
+update = persist updCmd
 
 delete :: Int -> IO Integer
-delete = execNonSelQuery . deleteCmd
+delete = execNonSelQuery . delCmd
