@@ -5,8 +5,6 @@ module TableMappings.EfectivosBaseDb
   update,
   delete,
 
-  toType,
-  fromType,
   selOneCmd,
   savCmd,
   updateCmd,
@@ -30,15 +28,15 @@ instance ToType Efectivo where
                emailNotificacion = fromSql (row!!6)::Maybe String,
                activo = fromSql (row!!9)::Bool }
 
-fromType :: Efectivo -> [SqlValue]
-fromType e =
-  [toSql $ nombre e,
-    toSql $ beneficiario e,
-    toSql $ emailNotificacion e,
-    toSql $ activo e,
-    toSql $ toString (guidCuenta e),
-    toSql $ idCuenta e]
-
+instance FromType Efectivo where
+  fromType e =
+    [toSql $ nombre e,
+     toSql $ beneficiario e,
+     toSql $ emailNotificacion e,
+     toSql $ activo e,
+     toSql $ toString (guidCuenta e),
+     toSql $ idCuenta e]
+  
 selOneCmd :: Int -> Command
 selOneCmd key =
   Command "SELECT * FROM cuentas where id = ?" [toSql key]

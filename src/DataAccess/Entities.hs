@@ -1,10 +1,12 @@
 module DataAccess.Entities
 (
   ToType(..),
+  FromType(..),
   selectOne,
   selectMany,
   getPages,
-  persist
+  persist,
+  savMany
 ) where
 
 import Database.HDBC
@@ -14,6 +16,9 @@ import DataAccess.ValueHelpers
 
 class ToType a where
   toType :: [SqlValue] -> a
+
+class FromType a where
+  fromType :: a -> [SqlValue]
 
 fstRowToType :: ToType a => [[SqlValue]] -> Maybe a
 fstRowToType rows =
@@ -37,3 +42,7 @@ getPages cmd = do
 persist :: (a -> Command) -> (Maybe a) -> IO Integer
 persist f Nothing  = return 0
 persist f (Just p) = execNonSelQuery (f p)
+
+savMany :: FromType a => String -> [a] -> IO ()
+savMany sql rows =
+  execManySql sql (map (\x -> fromType x) rows)

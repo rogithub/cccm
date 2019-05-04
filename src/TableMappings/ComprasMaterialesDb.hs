@@ -5,8 +5,6 @@ module TableMappings.ComprasMaterialesDb
   update,
   delete,
   
-  toType,
-  fromType,
   selOneCmd,
   savCmd,
   updateCmd,
@@ -29,15 +27,14 @@ instance ToType CompraMaterial where
                      cantidad = fromSql (row!!4) :: Double,
                      precio = fromSql (row!!5) :: Double }
 
-fromType :: CompraMaterial -> [SqlValue]
-fromType m =
-  [ toSql $ toString (compraId m),
-    toSql $ toString (materialId m),
-    toSql $ cantidad m,
-    toSql $ precio m,
-    toSql $ toString (guidCompraMaterial m),
-    toSql $ idCompraMaterial m ]
-
+instance FromType CompraMaterial where
+  fromType m =
+    [ toSql $ toString (compraId m),
+      toSql $ toString (materialId m),
+      toSql $ cantidad m,
+      toSql $ precio m,
+      toSql $ toString (guidCompraMaterial m),
+      toSql $ idCompraMaterial m ]
 
 selOneCmd :: Int -> Command
 selOneCmd key =

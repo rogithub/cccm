@@ -27,15 +27,14 @@ instance ToType CompraServicio where
                      cantidad = fromSql (row!!4) :: Double,
                      precio = fromSql (row!!5) :: Double }
 
-fromType :: CompraServicio -> [SqlValue]
-fromType c =
-  [ toSql $ toString (compraId c),
-    toSql $ descripcion c,
-    toSql $ cantidad c,
-    toSql $ precio c,
-    toSql $ toString (guidCompraServicio c),
-    toSql $ idCompraServicio c ]
-
+instance FromType CompraServicio where
+  fromType c =
+    [ toSql $ toString (compraId c),
+      toSql $ descripcion c,
+      toSql $ cantidad c,
+      toSql $ precio c,
+      toSql $ toString (guidCompraServicio c),
+      toSql $ idCompraServicio c ]
 
 selOneCmd :: Int -> Command
 selOneCmd key =

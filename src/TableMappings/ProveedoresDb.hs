@@ -7,8 +7,6 @@ module TableMappings.ProveedoresDb
   delete,
   getByName,
 
-  toType,
-  fromType,
   selOneCmd,
   savCmd,
   updateCmd,
@@ -34,18 +32,17 @@ instance ToType Proveedor where
                 comentarios = fromSql (r!!7)::Maybe String,
                 activo = fromSql (r!!8)::Bool }
 
-fromType :: Proveedor -> [SqlValue]
-fromType p =
-  [toSql $ empresa p,
-   toSql $ contacto p,
-   toSql $ domicilio p,
-   toSql $ telefono p,
-   toSql $ email  p,
-   toSql $ comentarios p,
-   toSql $ activo p,
-   toSql $ toString (guidProveedor p),
-   toSql $ idProveedor p]
-
+instance FromType Proveedor where
+  fromType p =
+    [toSql $ empresa p,
+     toSql $ contacto p,
+     toSql $ domicilio p,
+     toSql $ telefono p,
+     toSql $ email  p,
+     toSql $ comentarios p,
+     toSql $ activo p,
+     toSql $ toString (guidProveedor p),
+     toSql $ idProveedor p]
 
 getByNameCmd :: String -> Command
 getByNameCmd name =

@@ -37,18 +37,17 @@ instance ToType Material where
 
 
 
-fromType :: Material -> [SqlValue]
-fromType t =
-  [toSql $ nombre t,
-   toSql $ color t,
-   toSql $ unidad t,
-   toSql $ marca t,
-   toSql $ modelo t,
-   toSql $ comentarios t,
-   toSql $ activo t,
-   toSql $ toString (guidMaterial t),
-   toSql $ idMaterial t]
-
+instance FromType Material where
+  fromType t =
+    [toSql $ nombre t,
+     toSql $ color t,
+     toSql $ unidad t,
+     toSql $ marca t,
+     toSql $ modelo t,
+     toSql $ comentarios t,
+     toSql $ activo t,
+     toSql $ toString (guidMaterial t),
+     toSql $ idMaterial t]
 
 getByNameCmd :: String -> Command
 getByNameCmd name =

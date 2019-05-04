@@ -5,8 +5,6 @@ module TableMappings.BancosBaseDb
   update,
   delete,
 
-  toType,
-  fromType,
   selOneCmd,
   savCmd,
   updateCmd,
@@ -31,16 +29,16 @@ instance ToType Banco where
             emailNotificacion = fromSql (row!!6)::Maybe String,
             activo = fromSql (row!!9)::Bool }
 
-fromType :: Banco -> [SqlValue]
-fromType p =
-  [toSql $ banco p,
-   toSql $ clabe p,
-   toSql $ nocuenta p,
-   toSql $ beneficiario p,
-   toSql $ emailNotificacion p,
-   toSql $ activo p,
-   toSql $ toString (guidCuenta p),
-   toSql $ idCuenta p]
+instance FromType Banco where
+  fromType p =
+    [toSql $ banco p,
+     toSql $ clabe p,
+     toSql $ nocuenta p,
+     toSql $ beneficiario p,
+     toSql $ emailNotificacion p,
+     toSql $ activo p,
+     toSql $ toString (guidCuenta p),
+     toSql $ idCuenta p]
 
 
 selOneCmd :: Int -> Command

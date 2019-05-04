@@ -19,14 +19,22 @@ import TableMappings.ComprasMaterialesDb as Dbcm
 import TableMappings.ComprasServiciosDb as Dbcs
 
 
-savCmd :: CompraModel -> Command
-savCmd m =
-  Dbc.savCmd (compra m) `mappend`
-  (mconcat $ map (\x ->  Dbm.savCmd (material x)) (materialesNuevo m)) `mappend`
-  (mconcat $ map (\x -> Dbcm.savCmd (compraMaterial x)) (materialesNuevo m)) `mappend`
-  (mconcat $ map (\x -> Dbcm.savCmd x) (materialesExistente m)) `mappend`
-  (mconcat $ map (\x -> Dbcs.savCmd x) (servicios m))
+--savCmd :: CompraModel -> IO Integer
+--savCmd m = do
+--  persist $ Dbc.savCmd (compra m)
+--  (mconcat $ map (\x ->  Dbm.savCmd (material x)) (materialesNuevo m)) `mappend`
+--  (mconcat $ map (\x -> Dbcm.savCmd (compraMaterial x)) (materialesNuevo m)) `mappend`
+--  (mconcat $ map (\x -> Dbcm.savCmd x) (materialesExistente m)) `mappend`
+--  (mconcat $ map (\x -> Dbcs.savCmd x) (servicios m))
 
 
-save :: (Maybe CompraModel) -> IO Integer
-save = persist TableMappings.ComprasModelDb.savCmd
+
+save :: (Maybe CompraModel) -> IO Int
+save _ = return 0
+--save (Just m) = do
+--  persist Dbc.savCmd (Just (compra m))
+--  execManySql Dbm.savCmd (map (\x -> (material x)) (materialesNuevo m))
+
+
+
+  

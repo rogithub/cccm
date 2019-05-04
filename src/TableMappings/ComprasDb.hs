@@ -5,8 +5,6 @@ module TableMappings.ComprasDb
   update,
   delete,
 
-  toType,
-  fromType,
   selOneCmd,
   savCmd,
   updateCmd,
@@ -34,16 +32,16 @@ instance ToType Compra where
              iva = fromSql (r!!6)::Double,
              activo = fromSql (r!!7)::Bool }
 
-fromType :: Compra -> [SqlValue]
-fromType t =
-  [toSql $ toString (proveedorId t),
-   toSql $ show (fecha t),
-   toSql $ "", --docIdFacturaPdf t
-   toSql $ "", --docIdFacturaXml t
-   toSql $ iva t,
-   toSql $ activo t,
-   toSql $ toString (guidCompra t),
-   toSql $ idCompra t]
+instance FromType Compra where
+  fromType t =
+    [toSql $ toString (proveedorId t),
+     toSql $ show (fecha t),
+     toSql $ "", --docIdFacturaPdf t
+     toSql $ "", --docIdFacturaXml t
+     toSql $ iva t,
+     toSql $ activo t,
+     toSql $ toString (guidCompra t),
+     toSql $ idCompra t]
 
 
 selOneCmd :: Int -> Command

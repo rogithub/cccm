@@ -3,7 +3,8 @@ module DataAccess.Db
   getCon,
   execNonSel,
   execSel,
-  execQuery
+  execQuery,
+  execMany
 ) where
 
 import Control.Exception
@@ -19,6 +20,11 @@ execNonSel conn sqlCmdStr sqlVals = do
   state <- prepare conn sqlCmdStr
   rowCount <- execute state sqlVals
   return rowCount
+
+execMany :: Connection -> String -> [[SqlValue]] -> IO ()
+execMany conn sqlCmdStr sqlVals = do
+  state <- prepare conn sqlCmdStr
+  executeMany state sqlVals 
 
 execSel :: Connection -> String -> [SqlValue] -> IO [[SqlValue]]
 execSel conn sqlCmdStr sqlVals = do
