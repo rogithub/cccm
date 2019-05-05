@@ -26,12 +26,12 @@ sMaterial :: CompraModel -> IO ()
 sMaterial m = do
   savMany Dbm.savSql (map (\x -> material x) (materialesNuevo m))
 
-sCmaterial :: CompraModel -> IO ()
-sCmaterial m = do
+sCmatNuevo :: CompraModel -> IO ()
+sCmatNuevo m = do
   savMany Dbm.savSql (map (\x -> compraMaterial x) (materialesNuevo m))
 
-sCmaterial2 :: CompraModel -> IO ()
-sCmaterial2 m = do
+sCmatExis :: CompraModel -> IO ()
+sCmatExis m = do
   savMany Dbm.savSql (materialesExistente m)
 
 sServicios :: CompraModel -> IO ()
@@ -40,7 +40,7 @@ sServicios m = do
 
 save :: (Maybe CompraModel) -> IO ()
 save Nothing = return ()
-save (Just m) = sCompra m >> sMaterial m >> sCmaterial m >> sCmaterial2 m >> sServicios m
+save (Just m) = sCompra m >> sMaterial m >> sCmatNuevo m >> sCmatExis m >> sServicios m
   
 
 
