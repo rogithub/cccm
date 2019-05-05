@@ -41,7 +41,3 @@ sServicios m = do
 save :: (Maybe CompraModel) -> IO ()
 save Nothing = return ()
 save (Just m) = sCompra m >> sMaterial m >> sCmatNuevo m >> sCmatExis m >> sServicios m
-  
-
-
-  

@@ -43,6 +43,6 @@ persist :: (a -> Command) -> (Maybe a) -> IO Integer
 persist f Nothing  = return 0
 persist f (Just p) = execNonSelQuery (f p)
 
-savMany :: FromType a => String -> [a] -> IO ()
+savMany :: FromType a => SqlString -> [a] -> IO ()
 savMany sql rows =
   execManySql sql (map (\x -> fromType x) rows)
