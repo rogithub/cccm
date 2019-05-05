@@ -18,23 +18,30 @@ import TableMappings.MaterialesDb as Dbm
 import TableMappings.ComprasMaterialesDb as Dbcm
 import TableMappings.ComprasServiciosDb as Dbcs
 
+sCompra :: CompraModel -> IO ()
+sCompra m = do
+  Dbc.save (Just (compra m)) >> return ()
 
---savCmd :: CompraModel -> IO Integer
---savCmd m = do
---  persist $ Dbc.savCmd (compra m)
---  (mconcat $ map (\x ->  Dbm.savCmd (material x)) (materialesNuevo m)) `mappend`
---  (mconcat $ map (\x -> Dbcm.savCmd (compraMaterial x)) (materialesNuevo m)) `mappend`
---  (mconcat $ map (\x -> Dbcm.savCmd x) (materialesExistente m)) `mappend`
---  (mconcat $ map (\x -> Dbcs.savCmd x) (servicios m))
+sMaterial :: CompraModel -> IO ()
+sMaterial m = do
+  savMany Dbm.savSql (map (\x -> material x) (materialesNuevo m))
 
+sCmaterial :: CompraModel -> IO ()
+sCmaterial m = do
+  savMany Dbm.savSql (map (\x -> compraMaterial x) (materialesNuevo m))
 
+sCmaterial2 :: CompraModel -> IO ()
+sCmaterial2 m = do
+  savMany Dbm.savSql (materialesExistente m)
 
-save :: (Maybe CompraModel) -> IO Int
-save _ = return 0
---save (Just m) = do
---  persist Dbc.savCmd (Just (compra m))
---  execManySql Dbm.savCmd (map (\x -> (material x)) (materialesNuevo m))
+sServicios :: CompraModel -> IO ()
+sServicios m = do
+  savMany Dbcs.savSql (servicios m)
 
+save :: (Maybe CompraModel) -> IO ()
+save Nothing = return ()
+save (Just m) = sCompra m >> sMaterial m >> sCmaterial m >> sCmaterial2 m >> sServicios m
+  
 
 
   
